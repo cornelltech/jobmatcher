@@ -1,6 +1,5 @@
 import 'rxjs/add/observable/from';
 
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
@@ -34,7 +33,7 @@ export class JobsProvider {
     }
   ]
 
-  constructor(public http: HttpClient) {
+  constructor() {
     console.log('Hello JobsProvider Provider');
   }
 
