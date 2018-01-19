@@ -1,6 +1,10 @@
+import 'rxjs/add/operator/filter';
+
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
+import { Job } from '../../models/job';
+import { JobsProvider } from '../../providers/jobs/jobs';
+import { Observable } from 'rxjs/Observable';
 /**
  * Generated class for the JobDetailPage page.
  *
@@ -17,12 +21,15 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'job-detail.html',
 })
 export class JobDetailPage {
+  job$:Observable<Job>;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private jobsProvider: JobsProvider) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad JobDetailPage');
+
+    this.job$ = this.jobsProvider.fetchJob$(this.navParams.data.id);
   }
 
   goToStudent(evt:any):void {

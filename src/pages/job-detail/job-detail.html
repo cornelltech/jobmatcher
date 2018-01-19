@@ -18,4 +18,6 @@
   <button (click)="goToStudent($event)">Go to student page</button>
   <button (click)="goToCompany($event)">Go to company page</button>
 
+  <h3>{{ (job$ | async)?.title }}</h3>
+
 </ion-content>

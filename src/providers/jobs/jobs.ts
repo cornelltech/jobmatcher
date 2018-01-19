@@ -16,6 +16,7 @@ import { Job } from '../../models/job';
 export class JobsProvider {
   jobs: Job[] = [
     {
+      id: 'stusfdffsd',
       title: 'something',
       description: 'here is a thing to do',
       location: 'nevada',
@@ -24,6 +25,7 @@ export class JobsProvider {
       session: null
     },
     {
+      id: 'stusfdffsdssd',
       title: 'something else',
       description: 'here is a thing to do',
       location: 'nevada',
@@ -39,6 +41,12 @@ export class JobsProvider {
 
   fetchJobs$():Observable<Job[]> {
     return of(this.jobs);
+  }
+
+  fetchJob$(key:string):Observable<Job> {
+    const item:Job = this.jobs
+      .find((obj) => obj.id === key);
+    return of(item);
   }
 
 }

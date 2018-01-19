@@ -15,7 +15,17 @@
 
 <ion-content padding>
 
-  <button (click)="goToDetail($event)">Go to detail page</button>
+  <!-- <button (click)="goToDetail($event)">Go to detail page</button> -->
   <button (click)="goToCompany($event)">Go to company page</button>
+
+  <ion-list>
+    <button ion-item *ngFor="let item of jobs$ | async" (click)="goToDetail($event, item)">
+      <h2>{{ item.title }} </h2>
+      <h3>{{ item.company }} </h3>
+      <p>{{ item.description }}</p>
+    </button>
+  </ion-list>
+
+  <!-- {{ (jobs$ | async) | json }} -->
 
 </ion-content>

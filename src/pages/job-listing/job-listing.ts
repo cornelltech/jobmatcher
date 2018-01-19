@@ -30,12 +30,15 @@ export class JobListingPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad JobListingPage');
     this.jobs$ = this.jobsProvider.fetchJobs$();
+    this.jobs$.subscribe((payload) => {
+      console.log(payload);
+    });
   }
 
-  goToDetail(evt:any):void {
+  goToDetail(evt:any, job:Job):void {
     console.log('clicked job detail')
     console.log(evt)
-    this.navCtrl.push('job-detail-page', { id: 24 })
+    this.navCtrl.push('job-detail-page', { id: job.id })
   }
 
   goToCompany(evt:any):void {
