@@ -7,17 +7,70 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>job-detail</ion-title>
+    <ion-title> {{ (job$ | async)?.title }} </ion-title>
   </ion-navbar>
-
 </ion-header>
 
 
-<ion-content padding>
+<ion-content no-padding>
 
-  <button (click)="goToStudent($event)">Go to student page</button>
-  <button (click)="goToCompany($event)">Go to company page</button>
+  <ion-grid no-padding>
+    <ion-row>
+      <ion-col offset-md-2 col-md-8>
+          <ion-list no-lines>
+            <!-- Company List Item -->
+            <button ion-item (click)="goToCompany($event)">
+              <ion-avatar item-start>
+                <img [src]="(company$ | async)?.logo || 'http://via.placeholder.com/50x50'">
+              </ion-avatar>
+              <h2>{{ (company$ | async)?.name }}</h2>
+            </button>
+      
+            <!-- Job Location -->
+            <ion-item>
+              <ion-icon item-start name="navigate"></ion-icon>
+              {{ (job$ | async)?.location }}
+            </ion-item>
+      
+            <!-- Job Details -->
+            <ion-item text-wrap>
+              <ion-icon item-start name="document"></ion-icon>
+              {{ (job$ | async)?.description }}
+            </ion-item>
+      
+            <!-- Job Requirements -->
+            <ion-list-header>
+              Requirements
+              <button ion-button round clear icon-only item-end (click)="toggleRequirementsCollapse()">
+                <ion-icon [name]="requirementsSectionArrow"></ion-icon>
+              </button>
+            </ion-list-header>
+      
+            <ion-item *ngFor="let item of requirementItems$ | async">
+              <ion-icon item-start name="checkmark-circle-outline"></ion-icon>
+              {{ item.key }} - {{ item.value }}
+            </ion-item>
+      
+            <!-- Interested People -->
+            <ion-list-header *ngIf="isOwner$ | async">
+              Interested
+              <button ion-button round clear icon-only item-end (click)="togglePeopleCollapse()">
+                <ion-icon [name]="peopleSectionArrow"></ion-icon>
+              </button>
+            </ion-list-header>
+              
+          </ion-list>
 
-  <h3>{{ (job$ | async)?.title }}</h3>
+          <button ion-button block round icon-start *ngIf="!(isOwner$ | async)">
+            <ion-icon name="star"></ion-icon>
+            I'm Interested!
+          </button>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+    
+
+    
 
 </ion-content>

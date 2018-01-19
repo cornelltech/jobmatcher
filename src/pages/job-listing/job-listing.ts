@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { JobsProvider } from '../../providers/jobs/jobs';
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 
 import { Job } from '../../models/job';
 import { Company } from '../../models/company';
@@ -22,6 +23,8 @@ import { Company } from '../../models/company';
   templateUrl: 'job-listing.html',
 })
 export class JobListingPage {
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
+
   jobs$: Observable<Job[]>;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private jobsProvider: JobsProvider) {
@@ -31,9 +34,11 @@ export class JobListingPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad JobListingPage');
     this.jobs$ = this.jobsProvider.fetchJobs$();
-    this.jobs$.subscribe((payload) => {
-      console.log(payload);
-    });
+  }
+
+  ionViewDidLeave():void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
   goToDetail(evt:any, job:Job):void {
