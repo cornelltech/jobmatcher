@@ -20,7 +20,13 @@ export class JobsProvider {
       title: 'something',
       description: 'here is a thing to do',
       location: 'nevada',
-      company: null,
+      company: {
+        id: 'ct',
+        name: 'cornell tech',
+        description: 'yolo',
+        link: null,
+        logo: null
+      },
       requirements: null,
       session: null
     },
@@ -29,7 +35,13 @@ export class JobsProvider {
       title: 'something else',
       description: 'here is a thing to do',
       location: 'nevada',
-      company: null,
+      company: {
+        id: 'ct',
+        name: 'cornell tech',
+        description: 'yolo',
+        link: null,
+        logo: null
+      },
       requirements: null,
       session: null
     }

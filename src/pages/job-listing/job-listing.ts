@@ -4,6 +4,7 @@ import { JobsProvider } from '../../providers/jobs/jobs';
 import { Observable } from 'rxjs/Observable';
 
 import { Job } from '../../models/job';
+import { Company } from '../../models/company';
 
 /**
  * Generated class for the JobListingPage page.
@@ -41,10 +42,11 @@ export class JobListingPage {
     this.navCtrl.push('job-detail-page', { id: job.id })
   }
 
-  goToCompany(evt:any):void {
+  goToCompany(evt:any, company:Company):void {
     console.log('clicked company')
     console.log(evt)
-    this.navCtrl.push('company-detail-page')
+    evt.stopPropagation();
+    this.navCtrl.push('company-detail-page', { id: company.id })
   }
 
 }

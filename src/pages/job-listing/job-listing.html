@@ -19,10 +19,15 @@
   <button (click)="goToCompany($event)">Go to company page</button>
 
   <ion-list>
-    <button ion-item *ngFor="let item of jobs$ | async" (click)="goToDetail($event, item)">
-      <h2>{{ item.title }} </h2>
-      <h3>{{ item.company }} </h3>
-      <p>{{ item.description }}</p>
+    <button ion-item 
+      *ngFor="let item of jobs$ | async"
+      (click)="goToDetail($event, item)">
+        <ion-avatar item-start (click)="goToCompany($event, item.company)">
+          <img [src]="item.company?.logo || 'http://via.placeholder.com/50x50'">
+        </ion-avatar>
+        <h2>{{ item.title }} </h2>
+        <h3>{{ item.company.name }} </h3>
+        <p>{{ item.description }}</p>
     </button>
   </ion-list>
 
