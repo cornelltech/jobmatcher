@@ -3,11 +3,13 @@ import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
+import { TabsComponent } from '../pages/tabs/tabs'
+
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage:any = 'job-listing-page';
+  rootPage:any = TabsComponent;
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
     platform.ready().then(() => {
