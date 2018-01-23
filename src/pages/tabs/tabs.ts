@@ -26,9 +26,13 @@ import { UsersProvider } from '../../providers/users/users';
   templateUrl: 'tabs.html',
 })
 export class TabsPage {
-  tab1:any;
-  tab2:any;
-  tab3:any;
+
+  tabs:{
+    title:string;
+    icon:string;
+    view:any;
+  }[];
+
   permission$:Observable<Permission>;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UsersProvider) {
@@ -38,21 +42,64 @@ export class TabsPage {
 
       if(payload.userType === 'administrator') {
 
-        this.tab1 = JobListingPage;
-        this.tab2 = StudentDetailPage;
-        this.tab3 = StudentDetailPage;
+        this.tabs = [
+          {
+            title: 'Listings',
+            icon: 'list',
+            view: JobListingPage
+          },
+          {
+            title: 'Students',
+            icon: 'document',
+            view: JobListingPage
+          },
+          {
+            title: 'Companies',
+            icon: 'briefcase',
+            view: StudentDetailPage
+          }
+        ];
 
       } else if(payload.userType === 'recruiter') {
 
-        this.tab1 = JobListingPage;
-        this.tab2 = CompanyDetailPage;
-        this.tab3 = CompanyDetailPage;
+        this.tabs = [
+          {
+            title: 'Listings',
+            icon: 'list',
+            view: JobListingPage
+          },
+          {
+            title: 'Add Listing',
+            icon: 'add',
+            view: CompanyDetailPage
+          },
+          {
+            title: 'Profile',
+            icon: 'briefcase',
+            view: CompanyDetailPage
+          }
+        ];
 
       } else {
         // student
-        this.tab1 = JobListingPage;
-        this.tab2 = StudentDetailPage;
-        this.tab3 = StudentDetailPage;
+
+        this.tabs = [
+          {
+            title: 'Listings',
+            icon: 'list',
+            view: JobListingPage
+          },
+          {
+            title: 'Favorites',
+            icon: 'star',
+            view: JobListingPage
+          },
+          {
+            title: 'Profile',
+            icon: 'document',
+            view: StudentDetailPage
+          }
+        ];
 
       }
     })
