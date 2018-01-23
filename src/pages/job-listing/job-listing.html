@@ -7,28 +7,29 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>job-listing</ion-title>
+    <ion-title>Listings</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
-
-  <!-- <button (click)="goToDetail($event)">Go to detail page</button> -->
-  <button (click)="goToCompany($event)">Go to company page</button>
-
-  <ion-list>
-    <button ion-item 
-      *ngFor="let item of jobs$ | async"
-      (click)="goToDetail($event, item)">
-        <ion-avatar item-start (click)="goToCompany($event, item.company)">
-          <img [src]="item.company?.logo || 'http://via.placeholder.com/50x50'">
-        </ion-avatar>
-        <h2>{{ item.title }} </h2>
-        <h3>{{ item.company.name }} </h3>
-        <p>{{ item.description }}</p>
-    </button>
-  </ion-list>
-
+<ion-content no-padding>
+  <ion-grid no-padding>
+    <ion-row>
+      <ion-col offset-md-2 col-md-8>
+        <ion-list>
+          <button ion-item
+            *ngFor="let item of jobs$ | async"
+            (click)="goToDetail($event, item)">
+              <ion-avatar item-start (click)="goToCompany($event, item.company)">
+                <img [src]="item.company?.logo || 'http://via.placeholder.com/50x50'">
+              </ion-avatar>
+              <h2>{{ item.title }} </h2>
+              <h3>{{ item.company.name }} </h3>
+              <p>{{ item.description }}</p>
+          </button>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
