@@ -6,5 +6,5 @@ export interface User{
   name: string;
   email: string;
   permission: Permission;
-  job: Job[];
+  jobs: Job[];
 }

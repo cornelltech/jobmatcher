@@ -1,5 +1,7 @@
+import {Company} from './company';
+
 export interface Permission{
   id:string;
-  god: boolean;
-  // affiliation: Company;
+  userType: 'administrator' | 'recruiter' | 'student';
+  affiliation: Company;
 }
