@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
 import { Company } from '../../models/company';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Job } from '../../models/job';
+import { Student } from '../../models/user';
 import { Requirement } from '../../models/requirement';
 import { JobsProvider } from '../../providers/jobs/jobs';
 import { Observable } from 'rxjs/Observable';
@@ -67,7 +68,7 @@ export class JobDetailPage {
 
 
     this.isOwner$ = of(false);
-      
+
 
   }
 
@@ -76,10 +77,10 @@ export class JobDetailPage {
     this.ngUnsubscribe.complete();
   }
 
-  goToStudent(evt:any):void {
+  goToStudent(evt:any, student:Student):void {
     console.log('clicked it')
     console.log(evt)
-    this.navCtrl.push('student-detail-page')
+    this.navCtrl.push('student-detail-page', { id: student.id })
   }
 
   goToCompany(evt:any):void {
@@ -87,7 +88,7 @@ export class JobDetailPage {
       .map((payload:Company) => payload.id)
       .take(1)
       .takeUntil(this.ngUnsubscribe)
-      .subscribe((payload:string) => 
+      .subscribe((payload:string) =>
         this.navCtrl.push('company-detail-page', {id: payload})
       )
   }

@@ -10,7 +10,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 @IonicPage({
   name: 'student-detail-page',
-  segment: 'student-details',
+  segment: 'student-detail/:id',
 })
 @Component({
   selector: 'page-student-detail',

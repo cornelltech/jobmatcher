@@ -7,12 +7,25 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>student-list</ion-title>
+    <ion-title>Students</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
-
+<ion-content no-padding>
+  <ion-grid no-padding>
+    <ion-row>
+      <ion-col offset-md-2 col-md-8>
+        <ion-list>
+          <button ion-item
+            *ngFor="let item of students$ | async"
+            (click)="goToDetail($event, item)">
+              <h2>{{ item.name }} </h2>
+              <h3>{{ item.program }} &middot; {{ item.year }} </h3>
+          </button>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
