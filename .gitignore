@@ -23,6 +23,8 @@ node_modules/
 tmp/
 temp/
 hooks/
+src/*.js
+src/*.js.map
 platforms/
 plugins/
 plugins/android.json
