@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
+import { CreateStudentModal } from '../create-student-modal/create-student-modal';
 import { UsersProvider } from '../../providers/users/users';
 
 import { Student } from '../../models/user'
@@ -30,6 +31,7 @@ export class StudentListPage {
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
+    public modalCtrl: ModalController,
     private usersProvider:UsersProvider) {
   }
 
@@ -47,6 +49,14 @@ export class StudentListPage {
     console.log('clicked student detail')
     console.log(evt)
     this.navCtrl.push('student-detail-page', { id: student.id })
+  }
+
+  openModal():void {
+    const modal = this.modalCtrl.create(CreateStudentModal);
+    modal.onDidDismiss(data => {
+      console.log(data);
+    });
+    modal.present();
   }
 
 }
