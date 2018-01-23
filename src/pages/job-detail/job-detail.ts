@@ -1,14 +1,20 @@
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/take';
+import 'rxjs/add/observable/combineLatest';
 
 import { Component } from '@angular/core';
-import { Company } from '../../models/company';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+
+import { Company } from '../../models/company';
 import { Job } from '../../models/job';
 import { Student } from '../../models/user';
 import { Requirement } from '../../models/requirement';
+import { Permission } from '../../models/permission';
+
 import { JobsProvider } from '../../providers/jobs/jobs';
+import { UsersProvider } from '../../providers/users/users';
+
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
@@ -40,11 +46,13 @@ export class JobDetailPage {
   company$:Observable<Company>;
   requirement$:Observable<Requirement>;
   requirementItems$:Observable<{key:string, value:any}[]>;
+  students:Observable<Student[]>;
 
   isOwner$:Observable<boolean>;
 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private jobsProvider: JobsProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams,
+    private jobsProvider: JobsProvider, private usersProvider: UsersProvider) {
   }
 
   ionViewDidLoad() {
@@ -67,7 +75,15 @@ export class JobDetailPage {
       );
 
 
-    this.isOwner$ = of(false);
+    this.isOwner$ = Observable
+      .combineLatest(
+        this.company$,
+        this.usersProvider.fetchMyPermissions$(),
+          (company:Company, permissions:Permission) =>
+            ({company, permissions})
+      )
+      .map((payload) =>
+        payload.company.id === payload.permissions.affiliation.id)
 
 
   }

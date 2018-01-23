@@ -25,8 +25,14 @@ export class UsersProvider {
     email: 'jon@example.com',
     permission: {
       id: 'fghijk',
-      userType: 'administrator',
-      affiliation: null
+      userType: 'recruiter',
+      affiliation: {
+        id: 'ct',
+        name: 'cornell tech',
+        description: 'yolo',
+        link: null,
+        logo: null
+      },
     },
     jobs: []
   }
@@ -82,7 +88,7 @@ export class UsersProvider {
     console.log('Hello UsersProvider Provider');
   }
 
-  fetchStudents$():Observable<Student[]> {
+  fetchStudents$(job:Job=null):Observable<Student[]> {
     return of(this.students)
   }
 
