@@ -3,9 +3,11 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { Observable } from 'rxjs/Observable';
 
+import { CompanyDetailPage } from '../company-detail/company-detail';
+import { CompanyListPage } from '../company-list/company-list';
 import { JobListingPage } from '../job-listing/job-listing';
 import { StudentDetailPage } from '../student-detail/student-detail';
-import { CompanyDetailPage } from '../company-detail/company-detail';
+import { StudentListPage } from '../student-list/student-list';
 
 import { Permission } from '../../models/permission';
 
@@ -51,12 +53,12 @@ export class TabsPage {
           {
             title: 'Students',
             icon: 'document',
-            view: JobListingPage
+            view: StudentListPage
           },
           {
             title: 'Companies',
             icon: 'briefcase',
-            view: StudentDetailPage
+            view: CompanyListPage
           }
         ];
 
