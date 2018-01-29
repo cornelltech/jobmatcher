@@ -15,11 +15,13 @@ import {  NavParams, ViewController } from 'ionic-angular';
 })
 export class CreateStudentModal {
   form:FormGroup;
+  target:string;
 
   constructor(public navParams: NavParams,
     public viewCtrl: ViewController,
     private fb: FormBuilder) {
       this.createForm();
+      this.target = navParams.get('target');
   }
 
   ionViewDidLoad() {

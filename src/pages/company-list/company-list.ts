@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
+import { CreateStudentModal } from '../create-student-modal/create-student-modal';
 import { CompaniesProvider } from '../../providers/companies/companies';
 
 import { Company } from '../../models/company'
@@ -30,6 +31,7 @@ export class CompanyListPage {
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
+    public modalCtrl: ModalController,
     private companiesProvider:CompaniesProvider) {
   }
 
@@ -47,6 +49,14 @@ export class CompanyListPage {
     console.log('clicked company detail')
     console.log(evt)
     this.navCtrl.push('company-detail-page', { id: company.id })
+  }
+
+  openModal():void {
+    const modal = this.modalCtrl.create(CreateStudentModal, {target: 'company'});
+    modal.onDidDismiss(data => {
+      console.log(data);
+    });
+    modal.present();
   }
 
 }

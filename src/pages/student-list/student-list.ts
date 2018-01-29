@@ -52,7 +52,7 @@ export class StudentListPage {
   }
 
   openModal():void {
-    const modal = this.modalCtrl.create(CreateStudentModal);
+    const modal = this.modalCtrl.create(CreateStudentModal, {target: 'student'});
     modal.onDidDismiss(data => {
       console.log(data);
     });

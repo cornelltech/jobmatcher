@@ -8,7 +8,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Add a new student</ion-title>
+    <ion-title>Add a new {{target}}</ion-title>
     <ion-buttons end>
       <button type="button" ion-button icon-only (click)="closeModal()">
         <ion-icon name="close"></ion-icon>
@@ -45,7 +45,7 @@
       </span>
       <ion-row>
         <ion-col col-6>
-          <button ion-button type="button" clear icon-start (click)="addItem()"><ion-icon name="add"></ion-icon> Another Student </button>
+          <button ion-button type="button" clear icon-start (click)="addItem()"><ion-icon name="add"></ion-icon> Another {{target}} </button>
         </ion-col>
       </ion-row>
     </ion-grid>
