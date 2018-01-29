@@ -10,7 +10,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 @IonicPage({
   name: 'company-detail-page',
-  segment: 'company-details',
+  segment: 'company-details/:id',
 })
 @Component({
   selector: 'page-company-detail',

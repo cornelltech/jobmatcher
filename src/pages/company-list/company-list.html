@@ -13,6 +13,22 @@
 </ion-header>
 
 
-<ion-content padding>
-
+<ion-content no-padding>
+  <ion-grid no-padding>
+    <ion-row>
+      <ion-col offset-md-2 col-md-8>
+        <ion-list>
+          <button ion-item
+            *ngFor="let item of companies$ | async"
+            (click)="goToDetail($event, item)">
+            <ion-avatar item-start (click)="goToCompany($event, item)">
+              <img [src]="item?.logo || 'http://via.placeholder.com/50x50'">
+            </ion-avatar>
+            <h2>{{ item.name }} </h2>
+            <p>{{ item.description }}</p>
+          </button>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

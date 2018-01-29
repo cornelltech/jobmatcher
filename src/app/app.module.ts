@@ -8,6 +8,7 @@ import { MyApp } from './app.component';
 import { JobsProvider } from '../providers/jobs/jobs';
 import { TabsPageModule } from '../pages/tabs/tabs.module';
 import { UsersProvider } from '../providers/users/users';
+import { CompaniesProvider } from '../providers/companies/companies';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { UsersProvider } from '../providers/users/users';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     JobsProvider,
-    UsersProvider
+    UsersProvider,
+    CompaniesProvider
   ]
 })
 export class AppModule {}
