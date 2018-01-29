@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 
-import { CreateStudentModalModule } from '../create-student-modal/create-student-modal.module'
+import { CreateUserModalModule } from '../create-user-modal/create-user-modal.module'
 import { StudentListPage } from './student-list';
 
 
@@ -10,7 +10,7 @@ import { StudentListPage } from './student-list';
     StudentListPage,
   ],
   imports: [
-    CreateStudentModalModule,
+    CreateUserModalModule,
     IonicPageModule.forChild(StudentListPage),
   ],
 })

@@ -10,10 +10,10 @@ import {  NavParams, ViewController } from 'ionic-angular';
  */
 
 @Component({
-  selector: 'page-create-student-modal',
-  templateUrl: 'create-student-modal.html',
+  selector: 'page-create-user-modal',
+  templateUrl: 'create-user-modal.html',
 })
-export class CreateStudentModal {
+export class CreateUserModal {
   form:FormGroup;
   target:string;
 
@@ -25,7 +25,7 @@ export class CreateStudentModal {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad CreateStudentModal');
+    console.log('ionViewDidLoad CreateUserModal');
   }
 
   closeModal():void {
