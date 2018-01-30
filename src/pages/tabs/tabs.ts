@@ -67,24 +67,27 @@ export class TabsPage {
         ];
 
       } else if(payload.userType === 'recruiter') {
-
-        this.tabs = [
-          {
-            title: 'Listings',
-            icon: 'list',
-            view: JobListingPage
-          },
-          {
-            title: 'Add Listing',
-            icon: 'add',
-            view: CompanyDetailPage
-          },
-          {
-            title: 'Profile',
-            icon: 'briefcase',
-            view: CompanyDetailPage
-          }
-        ];
+        this.userProvider.fetchMyPermissions$().takeUntil(this.ngUnsubscribe)
+        .subscribe((payload) => {
+          this.tabs = [
+            {
+              title: 'Listings',
+              icon: 'list',
+              view: JobListingPage
+            },
+            {
+              title: 'Add Listing',
+              icon: 'add',
+              view: CompanyDetailPage
+            },
+            {
+              title: 'Profile',
+              icon: 'briefcase',
+              view: CompanyDetailPage,
+              params: {id: payload.affiliation.id}
+            }
+          ];
+        })
 
       } else {
         // student

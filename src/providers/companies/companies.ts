@@ -32,6 +32,13 @@ export class CompaniesProvider {
       description: 'makes $$ searches',
       link: 'www.amazon.com',
       logo: null
+    },
+    {
+      id: 'ct',
+      name: 'cornell tech',
+      description: 'we live here',
+      link: 'www.cornell.edu',
+      logo: null
     }
   ]
 

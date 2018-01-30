@@ -18,8 +18,6 @@ import { UsersProvider } from '../../providers/users/users';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
-import { of } from 'rxjs/observable/of';
-
 /**
  * Generated class for the JobDetailPage page.
  *
