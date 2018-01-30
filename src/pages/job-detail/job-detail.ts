@@ -4,7 +4,7 @@ import 'rxjs/add/operator/take';
 import 'rxjs/add/observable/combineLatest';
 
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 
 import { Company } from '../../models/company';
 import { Job } from '../../models/job';
@@ -14,6 +14,8 @@ import { Permission } from '../../models/permission';
 
 import { JobsProvider } from '../../providers/jobs/jobs';
 import { UsersProvider } from '../../providers/users/users';
+
+import { SettingsModal } from '../../modals/settings-modal/settings-modal';
 
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -52,7 +54,7 @@ export class JobDetailPage {
 
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    private jobsProvider: JobsProvider, private usersProvider: UsersProvider) {
+    public modalCtrl: ModalController, private jobsProvider: JobsProvider, private usersProvider: UsersProvider) {
   }
 
   ionViewDidLoad() {
@@ -114,6 +116,11 @@ export class JobDetailPage {
   }
   togglePeopleCollapse():void {
     this.isPeopleSectionCollapsed = !this.isPeopleSectionCollapsed;
+  }
+
+  openSettingsModal() {
+    const modal = this.modalCtrl.create(SettingsModal);
+    modal.present();
   }
 
 

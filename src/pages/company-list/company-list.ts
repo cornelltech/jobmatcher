@@ -4,7 +4,8 @@ import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angu
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
-import { CreateUserModal } from '../create-user-modal/create-user-modal';
+import { CreateUserModal } from '../../modals/create-user-modal/create-user-modal';
+import { SettingsModal } from '../../modals/settings-modal/settings-modal';
 import { CompaniesProvider } from '../../providers/companies/companies';
 
 import { Company } from '../../models/company'
@@ -56,6 +57,11 @@ export class CompanyListPage {
     modal.onDidDismiss(data => {
       console.log(data);
     });
+    modal.present();
+  }
+
+  openSettingsModal() {
+    const modal = this.modalCtrl.create(SettingsModal);
     modal.present();
   }
 

@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 
-import { CreateUserModalModule } from '../create-user-modal/create-user-modal.module'
+import { CreateUserModalModule } from '../../modals/create-user-modal/create-user-modal.module'
+import { SettingsModalModule } from '../../modals/settings-modal/settings-modal.module';
 import { StudentListPage } from './student-list';
 
 
@@ -11,6 +12,7 @@ import { StudentListPage } from './student-list';
   ],
   imports: [
     CreateUserModalModule,
+    SettingsModalModule,
     IonicPageModule.forChild(StudentListPage),
   ],
 })

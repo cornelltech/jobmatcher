@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+
+import { SettingsModal } from '../../modals/settings-modal/settings-modal';
 
 /**
  * Generated class for the CompanyDetailPage page.
@@ -18,11 +20,16 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class CompanyDetailPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad CompanyDetailPage');
+  }
+
+  openSettingsModal() {
+    const modal = this.modalCtrl.create(SettingsModal);
+    modal.present();
   }
 
 }

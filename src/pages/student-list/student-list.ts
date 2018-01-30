@@ -4,7 +4,8 @@ import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angu
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
-import { CreateUserModal } from '../create-user-modal/create-user-modal';
+import { SettingsModal } from '../../modals/settings-modal/settings-modal';
+import { CreateUserModal } from '../../modals/create-user-modal/create-user-modal';
 import { UsersProvider } from '../../providers/users/users';
 
 import { Student } from '../../models/user'
@@ -58,6 +59,11 @@ export class StudentListPage {
     modal.onDidDismiss(data => {
       console.log(data);
     });
+    modal.present();
+  }
+
+  openSettingsModal() {
+    const modal = this.modalCtrl.create(SettingsModal);
     modal.present();
   }
 
