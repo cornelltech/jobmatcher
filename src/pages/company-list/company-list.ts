@@ -47,13 +47,11 @@ export class CompanyListPage {
   }
 
   goToDetail(evt:any, company:Company):void {
-    console.log('clicked company detail')
-    console.log(evt)
     this.navCtrl.push('company-detail-page', { id: company.id })
   }
 
   openModal():void {
-    const modal = this.modalCtrl.create(CreateUserModal, {target: 'company'});
+    const modal = this.modalCtrl.create(CreateUserModal, {target: 'recruiter'});
     modal.onDidDismiss(data => {
       console.log(data);
     });

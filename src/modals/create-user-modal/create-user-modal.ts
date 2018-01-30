@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-import { NavParams, ViewController } from 'ionic-angular';
+import { NavParams, ViewController, ToastController } from 'ionic-angular';
 import { InvitationsProvider } from '../../providers/invitations/invitations';
 
 /**
@@ -20,6 +20,7 @@ export class CreateUserModal {
 
   constructor(public navParams: NavParams,
     public viewCtrl: ViewController,
+    public toastCtrl: ToastController,
     public inviationsProvider: InvitationsProvider,
     private fb: FormBuilder) {
       this.createForm();
@@ -66,9 +67,18 @@ export class CreateUserModal {
         obj.name,
         this.target,
       );
-      this.form.reset();
     });
+    this.createForm();
+    this.presentToast();
 
+  }
+
+  presentToast() {
+    let toast = this.toastCtrl.create({
+      message: 'Invitations Sent!',
+      duration: 3000
+    });
+    toast.present();
   }
 
 }
