@@ -1,5 +1,12 @@
+import 'rxjs/add/observable/combineLatest';
+
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+
+import { Student, User } from '../../models/user';
+import { UsersProvider } from '../../providers/users/users';
+
+import { Observable } from 'rxjs/Observable';
 
 /**
  * Generated class for the StudentDetailPage page.
@@ -17,12 +24,30 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'student-detail.html',
 })
 export class StudentDetailPage {
+  student$:Observable<Student>;
+  isOwner$:Observable<boolean>;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController,
+    public navParams: NavParams,
+    private usersProvider: UsersProvider) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad StudentDetailPage');
+
+    this.student$ = this.usersProvider
+      .fetchStudent$(this.navParams.data.id);
+
+    this.isOwner$ = Observable
+      .combineLatest(
+        this.student$,
+        this.usersProvider.fetchMe$(),
+          (currentPageStudent:Student, me:User) =>
+            ({currentPageStudent, me})
+      )
+    .map((payload) =>
+      payload.currentPageStudent.id === payload.me.id)
+
   }
 
 }

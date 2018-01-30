@@ -7,12 +7,26 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>student-detail</ion-title>
+    <ion-title>{{ (student$ | async)?.name }}</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
+<ion-content no-padding>
+
+  <ion-grid no-padding>
+    <ion-row>
+      <ion-col offset-md-2 col-md-8>
+        <h1> {{ (student$ | async)?.name }} </h1>
+        <h4> {{ (student$ | async)?.program }} &middot; {{ (student$ | async)?.year }} </h4>
+        <h4> <ion-icon name="mail"></ion-icon> {{ (student$ | async)?.email }} </h4>
+        <h4> <ion-icon name="document"></ion-icon> <a href="{{ (student$ | async)?.resumeLink }}">Resume</a> </h4>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+
 
 </ion-content>
