@@ -6,6 +6,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 
+import { AngularFireDatabase } from 'angularfire2/database';
+
 import { Company } from '../../models/company';
 import { Job } from '../../models/job';
 import { Permission } from '../../models/permission';
@@ -36,6 +38,8 @@ export class UsersProvider {
     },
     jobs: []
   }
+
+  list$:Observable<any>;
 
   recruiters:User[] = []
 
@@ -104,8 +108,8 @@ export class UsersProvider {
     }
   ]
 
-  constructor() {
-    console.log('Hello UsersProvider Provider');
+  constructor(public db: AngularFireDatabase,) {
+    this.list$ = db.list('list').valueChanges();
   }
 
   fetchStudents$(job:Job=null):Observable<Student[]> {

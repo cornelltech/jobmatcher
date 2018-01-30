@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { JobsProvider } from '../../providers/jobs/jobs';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+
+import { SettingsModal } from '../../modals/settings-modal/settings-modal';
 
 import { Job } from '../../models/job';
 import { Company } from '../../models/company';
@@ -27,7 +29,7 @@ export class JobListingPage {
 
   jobs$: Observable<Job[]>;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private jobsProvider: JobsProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, private jobsProvider: JobsProvider) {
 
   }
 
@@ -52,6 +54,11 @@ export class JobListingPage {
     console.log(evt)
     evt.stopPropagation();
     this.navCtrl.push('company-detail-page', { id: company.id })
+  }
+
+  openSettingsModal() {
+    const modal = this.modalCtrl.create(SettingsModal);
+    modal.present();
   }
 
 }

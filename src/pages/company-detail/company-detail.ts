@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+
+import { SettingsModal } from '../../modals/settings-modal/settings-modal';
 
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -31,9 +33,8 @@ export class CompanyDetailPage {
   company$:Observable<Company>;
   isOwner$:Observable<boolean>;
 
-
-  constructor(public navCtrl: NavController, public navParams: NavParams,
-    private usersProvider: UsersProvider, private companiesProvider: CompaniesProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController,
+             private usersProvider: UsersProvider, private companiesProvider: CompaniesProvider) {
   }
 
   ionViewDidLoad() {
@@ -54,6 +55,11 @@ export class CompanyDetailPage {
   ionViewDidLeave():void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+  }
+
+  openSettingsModal() {
+    const modal = this.modalCtrl.create(SettingsModal);
+    modal.present();
   }
 
 }

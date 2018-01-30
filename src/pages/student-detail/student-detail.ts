@@ -1,7 +1,9 @@
 import 'rxjs/add/observable/combineLatest';
 
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+
+import { SettingsModal } from '../../modals/settings-modal/settings-modal';
 
 import { Student, User } from '../../models/user';
 import { UsersProvider } from '../../providers/users/users';
@@ -29,6 +31,7 @@ export class StudentDetailPage {
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
+    public modalCtrl: ModalController,
     private usersProvider: UsersProvider) {
   }
 
@@ -48,6 +51,11 @@ export class StudentDetailPage {
     .map((payload) =>
       payload.currentPageStudent.id === payload.me.id)
 
+  }
+
+  openSettingsModal() {
+    const modal = this.modalCtrl.create(SettingsModal);
+    modal.present();
   }
 
 }

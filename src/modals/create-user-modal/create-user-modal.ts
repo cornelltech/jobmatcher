@@ -10,7 +10,7 @@ import {  NavParams, ViewController } from 'ionic-angular';
  */
 
 @Component({
-  selector: 'page-create-user-modal',
+  selector: 'create-user-modal',
   templateUrl: 'create-user-modal.html',
 })
 export class CreateUserModal {
