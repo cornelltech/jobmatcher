@@ -1,0 +1,41 @@
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/map';
+
+import { Injectable } from '@angular/core';
+
+import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
+
+import { AngularFireDatabase } from 'angularfire2/database';
+import { AngularFireAuth } from 'angularfire2/auth';
+import * as firebase from 'firebase/app';
+
+import { Company } from '../../models/company';
+import { Job } from '../../models/job';
+import { Permission } from '../../models/permission';
+import { User } from '../../models/user';
+
+@Injectable()
+export class AuthProvider {
+
+    hasValidSession$:Observable<boolean>;
+
+    constructor(public afAuth: AngularFireAuth) {
+
+        this.afAuth.authState.subscribe((p) => console.log(p));
+
+        this.hasValidSession$ = this.afAuth.authState
+            .map((payload) => payload && payload !== undefined);
+    }
+
+    login() {
+        this.afAuth.auth
+            .signInWithPopup(
+                new firebase.auth.GoogleAuthProvider()
+            );
+    }
+
+    logout() {
+        this.afAuth.auth.signOut();
+    }
+}

@@ -28,6 +28,7 @@ export class StudentListPage {
   students$:Observable<Student[]>;
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
+  list$:Observable<any>;
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
@@ -38,6 +39,7 @@ export class StudentListPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad StudentListPage');
     this.students$ = this.usersProvider.fetchStudents$();
+    this.list$ = this.usersProvider.list$;
   }
 
   ionViewDidLeave():void {
