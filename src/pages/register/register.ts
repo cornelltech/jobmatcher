@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+
+import { AuthProvider } from '../../providers/auth/auth';
 
 /**
  * Generated class for the RegisterPage page.
@@ -23,6 +25,7 @@ export class RegisterPage {
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams, 
+    private auth: AuthProvider,
     private fb: FormBuilder) {
       this.createForm();
   }
@@ -40,7 +43,7 @@ export class RegisterPage {
 
   onFormSubmit():void {
     const formModel = this.form.value;
-    console.log(formModel);
+    this.auth.register(formModel.email, formModel.password);
   }
 
   goToLoginPage() {

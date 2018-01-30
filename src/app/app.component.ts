@@ -9,7 +9,7 @@ import { AuthProvider } from '../providers/auth/auth';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage:any = 'tabs-page';
+  rootPage:any;
 
   constructor(
     platform: Platform,

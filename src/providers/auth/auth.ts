@@ -21,18 +21,19 @@ export class AuthProvider {
     hasValidSession$:Observable<boolean>;
 
     constructor(public afAuth: AngularFireAuth) {
-
-        this.afAuth.authState.subscribe((p) => console.log(p));
-
         this.hasValidSession$ = this.afAuth.authState
             .map((payload) => payload && payload !== undefined);
     }
 
-    login() {
+    register(email:string, password:string) {
         this.afAuth.auth
-            .signInWithPopup(
-                new firebase.auth.GoogleAuthProvider()
-            );
+            .createUserWithEmailAndPassword(email, password)
+    }
+
+
+    login(email:string, password:string) {
+        this.afAuth.auth
+            .signInWithEmailAndPassword(email, password)
     }
 
     logout() {

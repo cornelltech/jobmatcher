@@ -14,22 +14,26 @@
 
 
 <ion-content>
-  <ion-list>
+  <form [formGroup]="form" (ngSubmit)="onFormSubmit()" novalidate>
+    <ion-list>
 
-    <ion-item>
-      <ion-label fixed>Email</ion-label>
-      <ion-input type="text"></ion-input>
-    </ion-item>
+      <ion-item>
+        <ion-label fixed>Email</ion-label>
+        <ion-input type="email" formControlName="email"></ion-input>
+      </ion-item>
+    
+      <ion-item>
+        <ion-label fixed>Password</ion-label>
+        <ion-input type="password" formControlName="password"></ion-input>
+      </ion-item>
+    
+    </ion-list>
+
+    <button type="submit" [disabled]="!form.valid" ion-button block>Login</button>
+
+    <button type="button" ion-button block clear (click)="goToRegisterPage()">Create Account</button>
+  </form>
+
+  <button (click)="this.auth.logout()">Logout</button>
   
-    <ion-item>
-      <ion-label fixed>Password</ion-label>
-      <ion-input type="password"></ion-input>
-    </ion-item>
-  
-  </ion-list>
-
-  <button ion-button block>Login</button>
-
-  <button ion-button block clear (click)="goToRegisterPage()">Create Account</button>
-
 </ion-content>
