@@ -4,6 +4,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
+import { AddListingPage } from '../add-listing/add-listing';
 import { CompanyDetailPage } from '../company-detail/company-detail';
 import { CompanyListPage } from '../company-list/company-list';
 import { JobListingPage } from '../job-listing/job-listing';
@@ -78,7 +79,7 @@ export class TabsPage {
             {
               title: 'Add Listing',
               icon: 'add',
-              view: CompanyDetailPage
+              view: AddListingPage
             },
             {
               title: 'Profile',
