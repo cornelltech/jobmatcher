@@ -19,6 +19,11 @@ export class InvitationsProvider {
     constructor(private db: AngularFireDatabase) { }
 
     create(target:string, name:string, permissionScope:'recruiter' | 'student'='student', affiliationId:string='Cornell Tech') {
+        // const ct = this.db
+        //     .list('/companies', 
+        //         ref => ref.orderByChild('name').equalTo('Cornell Tech'))
+        //     .valueChanges();
+
         const itemRef = this.db.list('invitations');
         const uuid:string = guid();
         const isSent:boolean = false;
