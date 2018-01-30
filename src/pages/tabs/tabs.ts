@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 
 import { CompanyDetailPage } from '../company-detail/company-detail';
 import { CompanyListPage } from '../company-list/company-list';
@@ -33,14 +34,17 @@ export class TabsPage {
     title:string;
     icon:string;
     view:any;
+    params?:any;
   }[];
 
   permission$:Observable<Permission>;
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
+
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UsersProvider) {
     this.permission$ = this.userProvider.fetchMyPermissions$();
-
-    this.permission$.subscribe((payload) => {
+    this.permission$.takeUntil(this.ngUnsubscribe)
+    .subscribe((payload) => {
 
       if(payload.userType === 'administrator') {
 
@@ -63,45 +67,52 @@ export class TabsPage {
         ];
 
       } else if(payload.userType === 'recruiter') {
-
-        this.tabs = [
-          {
-            title: 'Listings',
-            icon: 'list',
-            view: JobListingPage
-          },
-          {
-            title: 'Add Listing',
-            icon: 'add',
-            view: CompanyDetailPage
-          },
-          {
-            title: 'Profile',
-            icon: 'briefcase',
-            view: CompanyDetailPage
-          }
-        ];
+        this.userProvider.fetchMyPermissions$().takeUntil(this.ngUnsubscribe)
+        .subscribe((payload) => {
+          this.tabs = [
+            {
+              title: 'Listings',
+              icon: 'list',
+              view: JobListingPage
+            },
+            {
+              title: 'Add Listing',
+              icon: 'add',
+              view: CompanyDetailPage
+            },
+            {
+              title: 'Profile',
+              icon: 'briefcase',
+              view: CompanyDetailPage,
+              params: {id: payload.affiliation.id}
+            }
+          ];
+        })
 
       } else {
         // student
 
-        this.tabs = [
-          {
-            title: 'Listings',
-            icon: 'list',
-            view: JobListingPage
-          },
-          {
-            title: 'Favorites',
-            icon: 'star',
-            view: JobListingPage
-          },
-          {
-            title: 'Profile',
-            icon: 'document',
-            view: StudentDetailPage
-          }
-        ];
+        this.userProvider.fetchMe$().takeUntil(this.ngUnsubscribe)
+          .subscribe((payload) => {
+            this.tabs = [
+              {
+                title: 'Listings',
+                icon: 'list',
+                view: JobListingPage
+              },
+              {
+                title: 'Favorites',
+                icon: 'star',
+                view: JobListingPage
+              },
+              {
+                title: 'Profile',
+                icon: 'document',
+                view: StudentDetailPage,
+                params: {id: payload.id}
+              }
+            ];
+          });
 
       }
     })
@@ -109,6 +120,11 @@ export class TabsPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad TabsPage');
+  }
+
+  ionViewDidLeave():void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
 }

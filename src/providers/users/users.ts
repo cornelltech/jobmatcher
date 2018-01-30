@@ -23,11 +23,11 @@ import { User, Student } from '../../models/user';
 export class UsersProvider {
   me:User = {
     id: 'abcde',
-    name: 'jon do',
+    name: 's do',
     email: 'jon@example.com',
     permission: {
       id: 'fghijk',
-      userType: 'administrator',
+      userType: 'recruiter',
       affiliation: {
         id: 'ct',
         name: 'cornell tech',
@@ -45,6 +45,26 @@ export class UsersProvider {
 
   students:Student[] = [
     {
+      id: 'abcde',
+      name: 's do',
+      email: 'jon@example.com',
+      permission: {
+        id: 'fghijk',
+        userType: 'student',
+        affiliation: {
+          id: 'ct',
+          name: 'cornell tech',
+          description: 'yolo',
+          link: null,
+          logo: null
+        },
+      },
+      jobs: [],
+      year: 2019,
+      program: 'LLM',
+      resumeLink: 'https://angular-mfppay.stackblitz.io/'
+    },
+    {
       id: 'abcdefffffffff',
       name: 'jon do',
       email: 'jon@example.com',
@@ -56,7 +76,7 @@ export class UsersProvider {
       jobs: [],
       year: 2018,
       program: 'CS',
-      resumeLink: null
+      resumeLink: 'https://angular-mfppay.stackblitz.io/'
     },
     {
       id: 'abcadfdsdde',
@@ -70,7 +90,7 @@ export class UsersProvider {
       jobs: [],
       year: 2018,
       program: 'LLM',
-      resumeLink: null
+      resumeLink: 'https://angular-mfppay.stackblitz.io/'
     },
     {
       id: 'adfdsdde',
@@ -84,7 +104,7 @@ export class UsersProvider {
       jobs: [],
       year: 2019,
       program: 'ORIE',
-      resumeLink: null
+      resumeLink: 'https://angular-mfppay.stackblitz.io/'
     }
   ]
 
@@ -102,6 +122,12 @@ export class UsersProvider {
         .filter((payload) => payload.permission.affiliation.id === company.id))
     }
     return of(this.recruiters)
+  }
+
+  fetchStudent$(key: string):Observable<Student> {
+    const item:Student = this.students
+      .find((obj) => obj.id === key);
+    return of(item);
   }
 
   fetchMe$():Observable<User> {

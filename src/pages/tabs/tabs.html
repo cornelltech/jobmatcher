@@ -9,6 +9,7 @@
     *ngFor="let tab of tabs"
     [tabIcon]="tab.icon"
     [tabTitle]="tab.title"
-    [root]="tab.view">
+    [root]="tab.view"
+    [rootParams]="tab.params">
   </ion-tab>
 </ion-tabs>`
