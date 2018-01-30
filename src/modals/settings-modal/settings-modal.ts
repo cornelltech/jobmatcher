@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import {  NavParams, ViewController } from 'ionic-angular';
 
+import { AuthProvider } from '../../providers/auth/auth';
+
 /**
  * Generated class for the CreateStudentModalPage page.
  *
@@ -15,10 +17,15 @@ import {  NavParams, ViewController } from 'ionic-angular';
 })
 export class SettingsModal {
 
-    constructor(public navParams: NavParams,public viewCtrl: ViewController,) {}
+    constructor(public navParams: NavParams,public viewCtrl: ViewController, private auth: AuthProvider) {}
 
     closeModal():void {
         this.viewCtrl.dismiss({});
+    }
+
+    onLogout():void {
+        this.auth.logout();
+        this.closeModal();
     }
 
 }
