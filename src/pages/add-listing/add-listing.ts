@@ -43,8 +43,10 @@ export class AddListingPage {
   }
 
   onFormSubmit():void {
-    const formModel = this.form.value;
-    console.log(formModel);
+    this.usersProvider.fetchMyPermissions$().subscribe((payload) => {
+      const jobData = {companyId: payload.affiliation.id, formValue: this.form.value};
+      console.log(jobData);
+    })
     this.form.reset();
   }
 
