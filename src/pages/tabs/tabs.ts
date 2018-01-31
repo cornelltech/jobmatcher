@@ -104,7 +104,8 @@ export class TabsPage {
               {
                 title: 'Favorites',
                 icon: 'star',
-                view: JobListingPage
+                view: JobListingPage,
+                params: {faves: true}
               },
               {
                 title: 'Profile',

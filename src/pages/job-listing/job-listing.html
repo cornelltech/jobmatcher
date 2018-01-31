@@ -7,7 +7,8 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Listings</ion-title>
+    <ion-title *ngIf="faves">Favorites</ion-title>
+    <ion-title *ngIf="!faves">Listings</ion-title>
     <ion-buttons end>
       <button ion-button icon-only (click)="openSettingsModal()">
         <ion-icon name="settings"></ion-icon>
