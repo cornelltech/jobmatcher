@@ -27,7 +27,7 @@ export class UsersProvider {
     email: 'jon@example.com',
     permission: {
       id: 'fghijk',
-      userType: 'administrator',
+      userType: 'student',
       affiliation: {
         id: 'ct',
         name: 'cornell tech',

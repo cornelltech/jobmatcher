@@ -28,14 +28,20 @@ export class JobListingPage {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   jobs$: Observable<Job[]>;
+  faves:boolean;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, private jobsProvider: JobsProvider) {
-
+  constructor(public navCtrl: NavController, public navParams: NavParams,
+    public modalCtrl: ModalController, private jobsProvider: JobsProvider) {
+      this.faves = this.navParams.data.faves;
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad JobListingPage');
-    this.jobs$ = this.jobsProvider.fetchJobs$();
+    if(this.faves) {
+      this.jobs$ = this.jobsProvider.fetchMyFavoriteJobs$();
+    } else {
+      this.jobs$ = this.jobsProvider.fetchJobs$();
+    }
   }
 
   ionViewDidLeave():void {
