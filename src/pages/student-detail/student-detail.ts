@@ -1,3 +1,4 @@
+import 'rxjs/add/operator/filter';
 import 'rxjs/add/observable/combineLatest';
 
 import { Component } from '@angular/core';
@@ -48,7 +49,8 @@ export class StudentDetailPage {
           (currentPageStudent:Student, me:User) =>
             ({currentPageStudent, me})
       )
-    .map((payload) =>
+      .filter((payload) => payload.me && payload.me !== undefined)
+      .map((payload) =>
       payload.currentPageStudent.id === payload.me.id)
 
   }
