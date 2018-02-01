@@ -146,4 +146,8 @@ export class UsersProvider {
     this.me.jobs = this.me.jobs.filter((payload) => payload.id !== job.id);
   }
 
+  isFavoritedJob(job:Job):boolean {
+    return this.me.jobs.some((payload) => payload == job);
+  }
+
 }

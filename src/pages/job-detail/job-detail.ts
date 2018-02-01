@@ -49,7 +49,9 @@ export class JobDetailPage {
   students:Observable<Student[]>;
 
   isOwner$:Observable<boolean>;
+  isStudent$:Observable<boolean>;
 
+  favoritesIcon:string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public modalCtrl: ModalController, private jobsProvider: JobsProvider, private usersProvider: UsersProvider) {
@@ -74,6 +76,9 @@ export class JobDetailPage {
         .map((key) => ({key:key, value:payload[key]}))
       );
 
+    this.isStudent$ = this.usersProvider
+      .fetchMyPermissions$()
+      .map((payload) => payload.userType == "student");
 
     this.isOwner$ = Observable
       .combineLatest(
@@ -85,6 +90,14 @@ export class JobDetailPage {
       .map((payload) =>
         payload.company.id === payload.permissions.affiliation.id)
 
+    this.job$.takeUntil(this.ngUnsubscribe).subscribe((payload) =>
+      {
+        if(this.usersProvider.isFavoritedJob(payload)) {
+          this.favoritesIcon = "star";
+        } else {
+          this.favoritesIcon = "star-outline";
+        }
+      });
   }
 
   ionViewDidLeave():void {
@@ -121,6 +134,12 @@ export class JobDetailPage {
     modal.present();
   }
 
+  addFavorite() {
+    this.job$
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe((payload => this.usersProvider.favoriteJob(payload)));
+    console.log('added fave');
+  }
 
   get requirementsSectionArrow():string {
     return this.isRequirementsSectionCollapsed ?
