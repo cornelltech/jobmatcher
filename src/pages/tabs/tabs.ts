@@ -95,13 +95,13 @@ export class TabsPage {
         {
           title: 'Add Listing',
           icon: 'add',
-          view: CompanyDetailPage
+          view: AddListingPage
         },
         {
           title: 'Profile',
           icon: 'briefcase',
           view: CompanyDetailPage,
-          params: {id: 1}
+          params: {id: 'ct2'}
         }
       ];
 
@@ -117,7 +117,8 @@ export class TabsPage {
         {
           title: 'Favorites',
           icon: 'star',
-          view: JobListingPage
+          view: JobListingPage,
+          params: {faves: true}
         },
         {
           title: 'Profile',
