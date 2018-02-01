@@ -26,7 +26,6 @@ export class UsersProvider {
     name: 's do',
     email: 'jon@example.com',
     permission: {
-      id: 'fghijk',
       userType: 'administrator',
       affiliation: {
         id: 'ct',

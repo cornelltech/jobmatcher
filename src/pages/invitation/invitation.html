@@ -17,7 +17,7 @@
   <ion-grid no-padding>
       <ion-row>
         <ion-col offset-md-2 col-md-8>
-          <form [formGroup]="form" (ngSubmit)="onFormSubmit()" novalidate>
+          <form *ngIf="invitation$|async" [formGroup]="form" (ngSubmit)="onFormSubmit()" novalidate>
             <ion-list>
         
               <ion-item>

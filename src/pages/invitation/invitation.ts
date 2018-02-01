@@ -84,13 +84,19 @@ export class InvitationPage {
       .take(1)
       .takeUntil(this.ngUnsubscribe)
       .subscribe((userType) => {
-        this.auth.register(
-          formModel.email,
-          formModel.password,
-          formModel.name,
-          userType
-        );
-      })
+        this.auth
+          .register$(
+            formModel.email,
+            formModel.password,
+            formModel.name,
+            userType
+          )
+          .takeUntil(this.ngUnsubscribe)
+          .subscribe(() => {
+            console.log('hi nex')
+            this.navCtrl.setRoot('tabs-page');
+          });
+      });
   }
 
   goToLoginPage() {

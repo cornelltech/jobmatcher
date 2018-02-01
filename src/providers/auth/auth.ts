@@ -4,6 +4,7 @@ import 'rxjs/add/operator/map';
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { of } from 'rxjs/observable/of';
 
 import { ToastController } from 'ionic-angular';
@@ -28,7 +29,9 @@ export class AuthProvider {
             .map((payload) => payload && payload !== undefined);
     }
 
-    register(email:string, password:string, name:string, userType:'recruiter' | 'student') {
+    register$(email:string, password:string, name:string, userType:'recruiter' | 'student'):Observable<User | null> {
+        let source = new ReplaySubject<User>(1);
+
         this.afAuth.auth
             .createUserAndRetrieveDataWithEmailAndPassword(email, password)
             .then((payload) => {
@@ -44,6 +47,10 @@ export class AuthProvider {
                     jobs: []
                 }
                 this.users.create(obj);
+
+                console.log('done, emit next')
+
+                source.next(obj);
             })
             .catch((err) => {
                 this.toastCtrl
@@ -53,7 +60,9 @@ export class AuthProvider {
                         position: 'bottom'
                     })
                     .present();
-            })
+            });
+
+        return source;
     }
 
 
