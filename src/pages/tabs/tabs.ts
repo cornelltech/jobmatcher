@@ -6,6 +6,7 @@ import { IonicPage, NavController, NavParams, Tabs } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
+import { AddListingPage } from '../add-listing/add-listing';
 import { CompanyDetailPage } from '../company-detail/company-detail';
 import { CompanyListPage } from '../company-list/company-list';
 import { JobListingPage } from '../job-listing/job-listing';
