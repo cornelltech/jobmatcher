@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-import {  NavParams, ViewController } from 'ionic-angular';
+import { NavParams, ViewController, ToastController } from 'ionic-angular';
+import { InvitationsProvider } from '../../providers/invitations/invitations';
 
 /**
  * Generated class for the CreateStudentModalPage page.
@@ -15,10 +16,12 @@ import {  NavParams, ViewController } from 'ionic-angular';
 })
 export class CreateUserModal {
   form:FormGroup;
-  target:string;
+  target:'recruiter' | 'student';
 
   constructor(public navParams: NavParams,
     public viewCtrl: ViewController,
+    public toastCtrl: ToastController,
+    public inviationsProvider: InvitationsProvider,
     private fb: FormBuilder) {
       this.createForm();
       this.target = navParams.get('target');
@@ -58,8 +61,24 @@ export class CreateUserModal {
 
   onFormSubmit():void {
     const formModel = this.form.value;
-    console.log(formModel);
-    this.form.reset();
+    formModel.list.map((obj) => {
+      this.inviationsProvider.create(
+        obj.email,
+        obj.name,
+        this.target,
+      );
+    });
+    this.createForm();
+    this.presentToast();
+
+  }
+
+  presentToast() {
+    let toast = this.toastCtrl.create({
+      message: 'Invitations Sent!',
+      duration: 3000
+    });
+    toast.present();
   }
 
 }

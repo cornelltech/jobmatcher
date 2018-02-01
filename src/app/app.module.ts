@@ -15,6 +15,7 @@ import { JobsProvider } from '../providers/jobs/jobs';
 import { TabsPageModule } from '../pages/tabs/tabs.module';
 import { UsersProvider } from '../providers/users/users';
 import { CompaniesProvider } from '../providers/companies/companies';
+import { InvitationsProvider } from '../providers/invitations/invitations';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { CompaniesProvider } from '../providers/companies/companies';
     AuthProvider,
     JobsProvider,
     UsersProvider,
-    CompaniesProvider
+    CompaniesProvider,
+    InvitationsProvider,
   ]
 })
 export class AppModule {}
