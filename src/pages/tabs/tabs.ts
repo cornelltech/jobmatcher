@@ -41,6 +41,9 @@ export class TabsPage {
   }[];
   x = CompanyListPage;
 
+  color:string;
+
+  permission$:Observable<Permission>;
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UsersProvider) {

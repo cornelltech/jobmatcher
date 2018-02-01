@@ -9,6 +9,9 @@
   <ion-navbar>
     <ion-title> {{ (job$ | async)?.title }} </ion-title>
     <ion-buttons end>
+      <button ion-button icon-only (click)="addFavorite()" *ngIf="isStudent$ | async">
+        <ion-icon [name]="favoritesIcon"></ion-icon>
+      </button>
       <button ion-button icon-only (click)="openSettingsModal()">
         <ion-icon name="settings"></ion-icon>
       </button>
@@ -30,19 +33,19 @@
               </ion-avatar>
               <h2>{{ (company$ | async)?.name }}</h2>
             </button>
-      
+
             <!-- Job Location -->
             <ion-item>
               <ion-icon item-start name="navigate"></ion-icon>
               {{ (job$ | async)?.location }}
             </ion-item>
-      
+
             <!-- Job Details -->
             <ion-item text-wrap>
               <ion-icon item-start name="document"></ion-icon>
               {{ (job$ | async)?.description }}
             </ion-item>
-      
+
             <!-- Job Requirements -->
             <ion-list-header>
               Requirements
@@ -50,12 +53,12 @@
                 <ion-icon [name]="requirementsSectionArrow"></ion-icon>
               </button>
             </ion-list-header>
-      
+
             <ion-item *ngFor="let item of requirementItems$ | async">
               <ion-icon item-start name="checkmark-circle-outline"></ion-icon>
               {{ item.key }} - {{ item.value }}
             </ion-item>
-      
+
             <!-- Interested People -->
             <ion-list-header *ngIf="isOwner$ | async">
               Interested
@@ -63,7 +66,7 @@
                 <ion-icon [name]="peopleSectionArrow"></ion-icon>
               </button>
             </ion-list-header>
-              
+
           </ion-list>
 
           <button ion-button block round icon-start *ngIf="!(isOwner$ | async)">
@@ -74,8 +77,8 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-    
 
-    
+
+
 
 </ion-content>

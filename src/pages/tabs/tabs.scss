@@ -1,3 +1,31 @@
 page-tabs {
-    
+  ion-tabs.tabs-md-primary {
+    ion-tab {
+      .toolbar-background {
+        background-color: #488aff;
+      }
+      .toolbar-title { color: white; }
+      .bar-button { color: white; }
+    }
+  }
+
+  ion-tabs.tabs-md-secondary {
+    ion-tab {
+      .toolbar-background {
+        background-color: #32db64;
+      }
+      .toolbar-title { color: white; }
+      .bar-button { color: white; }
+    }
+  }
+
+  ion-tabs.tabs-md-danger {
+    ion-tab {
+      .toolbar-background {
+        background-color: #f53d3d;
+      }
+      .toolbar-title { color: white; }
+      .bar-button { color: white; }
+    }
+  }
 }
