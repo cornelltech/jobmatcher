@@ -38,6 +38,8 @@ export class TabsPage {
     params?:any;
   }[];
 
+  color:string;
+
   permission$:Observable<Permission>;
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
@@ -48,7 +50,7 @@ export class TabsPage {
     .subscribe((payload) => {
 
       if(payload.userType === 'administrator') {
-
+        this.color = "danger";
         this.tabs = [
           {
             title: 'Listings',
@@ -70,6 +72,7 @@ export class TabsPage {
       } else if(payload.userType === 'recruiter') {
         this.userProvider.fetchMyPermissions$().takeUntil(this.ngUnsubscribe)
         .subscribe((payload) => {
+          this.color = "secondary";
           this.tabs = [
             {
               title: 'Listings',
@@ -95,6 +98,7 @@ export class TabsPage {
 
         this.userProvider.fetchMe$().takeUntil(this.ngUnsubscribe)
           .subscribe((payload) => {
+            this.color = "primary";
             this.tabs = [
               {
                 title: 'Listings',
