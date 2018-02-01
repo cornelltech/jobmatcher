@@ -112,6 +112,11 @@ export class UsersProvider {
     this.list$ = db.list('list').valueChanges();
   }
 
+  create(user:User):void {
+    const itemRef = this.db.list('users');
+    itemRef.push(user);
+  }
+
   fetchStudents$(job:Job=null):Observable<Student[]> {
     return of(this.students)
   }

@@ -11,6 +11,8 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 
+import { UsersProvider } from '../users/users';
+
 import { Company } from '../../models/company';
 import { Job } from '../../models/job';
 import { Permission } from '../../models/permission';
@@ -21,14 +23,28 @@ export class AuthProvider {
 
     hasValidSession$:Observable<boolean>;
 
-    constructor(public afAuth: AngularFireAuth, private toastCtrl: ToastController) {
+    constructor(public afAuth: AngularFireAuth, private toastCtrl: ToastController, private users:UsersProvider) {
         this.hasValidSession$ = this.afAuth.authState
             .map((payload) => payload && payload !== undefined);
     }
 
-    register(email:string, password:string, userType:'recruiter' | 'student') {
+    register(email:string, password:string, name:string, userType:'recruiter' | 'student') {
         this.afAuth.auth
-            .createUserWithEmailAndPassword(email, password)
+            .createUserAndRetrieveDataWithEmailAndPassword(email, password)
+            .then((payload) => {
+                const uid:string = payload.user ? payload.user.uid : null;
+                const obj:User = {
+                    id: uid,
+                    name: name,
+                    email: email,
+                    permission: {
+                        userType: userType,
+                        affiliation: null
+                    },
+                    jobs: []
+                }
+                this.users.create(obj);
+            })
             .catch((err) => {
                 this.toastCtrl
                     .create({
@@ -45,6 +61,7 @@ export class AuthProvider {
         this.afAuth.auth
             .signInWithEmailAndPassword(email, password)
             .catch((err) => {
+                console.log(err);
                 this.toastCtrl
                     .create({
                         message: `Sorry, we can't log you in with these credentials`,

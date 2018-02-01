@@ -44,7 +44,7 @@ export class RegisterPage {
 
   onFormSubmit():void {
     const formModel = this.form.value;
-    this.auth.register(formModel.email, formModel.password);
+    // this.auth.register(formModel.email, formModel.password);
   }
 
   goToLoginPage() {

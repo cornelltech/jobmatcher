@@ -5,8 +5,6 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-
-
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
@@ -89,6 +87,7 @@ export class InvitationPage {
         this.auth.register(
           formModel.email,
           formModel.password,
+          formModel.name,
           userType
         );
       })
