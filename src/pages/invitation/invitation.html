@@ -7,14 +7,42 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>invitation</ion-title>
+    <ion-title></ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
+  <ion-grid no-padding>
+      <ion-row>
+        <ion-col offset-md-2 col-md-8>
+          <form [formGroup]="form" (ngSubmit)="onFormSubmit()" novalidate>
+            <ion-list>
+        
+              <ion-item>
+                <ion-label fixed>Name</ion-label>
+                <ion-input type="text" formControlName="name"></ion-input>
+              </ion-item>
+        
+              <ion-item>
+                <ion-label fixed>Email</ion-label>
+                <ion-input type="email" formControlName="email"></ion-input>
+              </ion-item>
+            
+              <ion-item>
+                <ion-label fixed>Password</ion-label>
+                <ion-input type="password" formControlName="password"></ion-input>
+              </ion-item>
+            
+            </ion-list>
+            
+            <button type="submit" [disabled]="!form.valid" ion-button block>Create {{ userType$ | async }} Account</button>
 
-  {{ (invitation$ | async) | json }}
-
+            <button type="button" ion-button block clear>Login</button>
+        
+          </form>
+        </ion-col>
+      </ion-row>
+  </ion-grid>
 </ion-content>

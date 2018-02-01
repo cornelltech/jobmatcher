@@ -1,11 +1,18 @@
+import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/filter';
+
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+
+
 
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
 import { Invitation } from '../../models/invitation';
 import { InvitationsProvider } from '../../providers/invitations/invitations';
+import { AuthProvider } from '../../providers/auth/auth';
 
 /**
  * Generated class for the InvitationPage page.
@@ -25,16 +32,32 @@ import { InvitationsProvider } from '../../providers/invitations/invitations';
 export class InvitationPage {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
+  form:FormGroup;
   invitation$: Observable<Invitation>;
+  userType$: Observable<'recruiter' | 'student'>;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private invitation: InvitationsProvider) {
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private invitation: InvitationsProvider,
+    private auth: AuthProvider,
+    private fb: FormBuilder) {
+      this.createForm();
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad InvitationPage');
+    this.resolveNavParams();
 
-    this.invitation$ = this.invitation.invitation$;
-    
+    this.userType$ = this.invitation$
+      .map((payload) => payload.permissionScope);
+
+    this.invitation$
+      .filter((payload) => payload != null)
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe((payload) => {
+        this.form.patchValue({name:payload.name});
+        this.form.patchValue({email:payload.target});
+      });
   }
 
   ionViewDidLeave():void {
@@ -42,11 +65,37 @@ export class InvitationPage {
     this.ngUnsubscribe.complete();
   }
 
-
   resolveNavParams():void {
     const params = this.navParams.data;
-    const code:string = params.get('code');
-    this.invitation.lookup(code);
+    const code:string = params.code;
+    
+    this.invitation$ = this.invitation.lookup$(code);
+  }
+
+  createForm():void {
+    this.form = this.fb.group({
+      name: new FormControl('', [Validators.required]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    });
+  }
+
+  onFormSubmit():void {
+    const formModel = this.form.value;
+    this.userType$
+      .take(1)
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe((userType) => {
+        this.auth.register(
+          formModel.email,
+          formModel.password,
+          userType
+        );
+      })
+  }
+
+  goToLoginPage() {
+    this.navCtrl.setRoot('login-page');
   }
 
 }

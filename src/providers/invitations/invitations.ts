@@ -16,16 +16,9 @@ import * as firebase from 'firebase/app';
 @Injectable()
 export class InvitationsProvider {
 
-    invitation$:Observable<Invitation>;
-
     constructor(private db: AngularFireDatabase) { }
 
     create(target:string, name:string, permissionScope:'recruiter' | 'student'='student', affiliationId:string=null) {
-        // const ct = this.db
-        //     .list('/companies', 
-        //         ref => ref.orderByChild('name').equalTo('Cornell Tech'))
-        //     .valueChanges();
-
         const itemRef = this.db.list('invitations');
         const uuid:string = guid();
         const isSent:boolean = false;
@@ -41,17 +34,15 @@ export class InvitationsProvider {
         itemRef.push(payload);
     }
 
-    lookup(code:string) {
-        this.invitation$ = this.db
+    lookup$(code:string):Observable<Invitation> {
+        return this.db
             .list('/invitations',
-                ref => ref.orderByChild('code').equalTo(code)
+                ref => ref.orderByChild('uuid').equalTo(code)
             )
             .valueChanges()
-            .map((payload:Invitation[]) => {
-                console.log('hi')
-                console.log(payload)
-                return payload.length > 0 ? payload[0] : null;
-            })
+            .map((payload:Invitation[]) =>
+                payload.length > 0 ? payload[0] : null
+            );
     }
 
 }

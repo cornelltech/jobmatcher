@@ -36,6 +36,7 @@ export class RegisterPage {
 
   createForm():void {
     this.form = this.fb.group({
+      name: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required, Validators.minLength(6)]),
     });
