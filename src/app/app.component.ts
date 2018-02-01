@@ -27,18 +27,17 @@ export class MyApp {
 
         const path = location.path();
         const routeToInvitation = path.includes('invitation')
-
-        auth.hasValidSession$
-          .subscribe((payload:boolean) => {
-
-            if(routeToInvitation) {
-              // pass - let the DeepLinks do what they do
-            }else if(payload) {
-              this.rootPage = 'tabs-page';
-            }else{
-              this.rootPage = 'login-page';
-            }
-          });
+        this.rootPage = 'tabs-page';
+        // auth.hasValidSession$
+        //   .subscribe((payload:boolean) => {
+        //     if(routeToInvitation) {
+        //       // pass - let the DeepLinks do what they do
+        //     }else if(payload) {
+        //       this.rootPage = 'tabs-page';
+        //     }else{
+        //       this.rootPage = 'login-page';
+        //     }
+        //   });
 
       });
   }

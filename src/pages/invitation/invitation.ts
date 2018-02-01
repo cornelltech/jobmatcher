@@ -93,7 +93,6 @@ export class InvitationPage {
           )
           .takeUntil(this.ngUnsubscribe)
           .subscribe(() => {
-            console.log('hi nex')
             this.navCtrl.setRoot('tabs-page');
           });
       });

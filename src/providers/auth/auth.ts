@@ -47,9 +47,6 @@ export class AuthProvider {
                     jobs: []
                 }
                 this.users.create(obj);
-
-                console.log('done, emit next')
-
                 source.next(obj);
             })
             .catch((err) => {
