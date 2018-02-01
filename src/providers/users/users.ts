@@ -1,17 +1,22 @@
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/skip';
+import 'rxjs/add/operator/take';
 
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
+import { from } from 'rxjs/observable/from';
 
 import { AngularFireDatabase } from 'angularfire2/database';
+import { AngularFireAuth } from 'angularfire2/auth';
 
 import { Company } from '../../models/company';
 import { Job } from '../../models/job';
 import { Permission } from '../../models/permission';
 import { User, Student } from '../../models/user';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 /*
   Generated class for the UsersProvider provider.
@@ -22,19 +27,12 @@ import { User, Student } from '../../models/user';
 @Injectable()
 export class UsersProvider {
   me:User = {
-    id: 'abcde',
-    name: 's do',
-    email: 'jon@example.com',
+    id: "xvw8wwboqAfr9609pReU9FRIAtN2",
+    name: "adrian vatchinsky",
+    email: "avatchinsky@outlook.com",
     permission: {
-      id: 'fghijk',
-      userType: 'student',
-      affiliation: {
-        id: 'ct',
-        name: 'cornell tech',
-        description: 'yolo',
-        link: null,
-        logo: null
-      },
+      userType: "recruiter",
+      affiliation: null
     },
     jobs: [
       {
@@ -78,7 +76,6 @@ export class UsersProvider {
       name: 's do',
       email: 'jon@example.com',
       permission: {
-        id: 'fghijk',
         userType: 'student',
         affiliation: {
           id: 'ct',
@@ -98,7 +95,6 @@ export class UsersProvider {
       name: 'jon do',
       email: 'jon@example.com',
       permission: {
-        id: 'fghijk',
         userType: 'student',
         affiliation: null
       },
@@ -112,7 +108,6 @@ export class UsersProvider {
       name: 'jane do',
       email: 'jane@example.com',
       permission: {
-        id: 'fghiasssssjk',
         userType: 'student',
         affiliation: null
       },
@@ -126,7 +121,6 @@ export class UsersProvider {
       name: 'lo do',
       email: 'lo@example.com',
       permission: {
-        id: 'fasssssjk',
         userType: 'student',
         affiliation: null
       },
@@ -137,8 +131,24 @@ export class UsersProvider {
     }
   ]
 
-  constructor(public db: AngularFireDatabase,) {
+  constructor(public db: AngularFireDatabase, public afAuth: AngularFireAuth) {
     this.list$ = db.list('list').valueChanges();
+  }
+
+  lookup$(id:string):Observable<User> {
+    return this.db
+      .list('/users',
+          ref => ref.orderByChild('id').equalTo(id)
+      )
+      .valueChanges()
+      .map((payload:User[]) =>
+        payload.length > 0 ? payload[0] : null
+      );
+    }
+
+  create(user:User):void {
+    const itemRef = this.db.list('users');
+    itemRef.push(user);
   }
 
   fetchStudents$(job:Job=null):Observable<Student[]> {
@@ -160,19 +170,27 @@ export class UsersProvider {
   }
 
   fetchMe$():Observable<User> {
+    const uid:string = this.afAuth.auth.currentUser ?
+      this.afAuth.auth.currentUser.uid : '';
+
+    // return this.lookup$(uid);
     return of(this.me);
   }
 
   fetchMyPermissions$():Observable<Permission> {
-    return this.fetchMe$().map((payload) => payload.permission)
+    return this.fetchMe$()
+      .filter((payload) => 
+        payload && payload !== undefined)
+      .map((payload) => 
+        payload.permission);
   }
 
   favoriteJob(job:Job):void {
-    this.me.jobs = [job, ...this.me.jobs];
+    // this.me.jobs = [job, ...this.me.jobs];
   }
 
   unfavoriteJob(job:Job):void {
-    this.me.jobs = this.me.jobs.filter((payload) => payload.id !== job.id);
+    // this.me.jobs = this.me.jobs.filter((payload) => payload.id !== job.id);
   }
 
   isFavoritedJob(job:Job):boolean {
