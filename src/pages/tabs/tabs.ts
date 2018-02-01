@@ -65,6 +65,7 @@ export class TabsPage {
   setupTabs(user:User){
     const permissions:Permission = user ? user.permission : null;
     if(permissions.userType === 'administrator') {
+      this.color = "danger";
       this.tabs = [
         {
           title: 'Listings',
@@ -84,6 +85,7 @@ export class TabsPage {
       ];
 
     }else if(permissions.userType === 'recruiter') {
+      this.color = "secondary";
       this.tabs = [
         {
           title: 'Listings',
@@ -105,6 +107,7 @@ export class TabsPage {
 
     }else{
       // student
+      this.color = "primary";
       this.tabs = [
         {
           title: 'Listings',
