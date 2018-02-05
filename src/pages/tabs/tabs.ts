@@ -47,12 +47,14 @@ export class TabsPage {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UsersProvider) {
-    this.userProvider
-      .fetchMe$()
-      .take(1)
-      .subscribe((payload)=>{
-        this.setupTabs(payload);
-      });
+    const me:User = this.navParams.get('me');
+    if(me){
+      this.setupTabs(me);
+    }else{
+      // TODO: Figure out a more graceful fallback
+    }
+
+
   }
 
   ionViewDidLoad() { }
@@ -101,7 +103,7 @@ export class TabsPage {
           title: 'Profile',
           icon: 'briefcase',
           view: CompanyDetailPage,
-          params: {id: 'ct2'}
+          params: {id: 'ct'}
         }
       ];
 
