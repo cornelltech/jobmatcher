@@ -31,38 +31,18 @@ export class UsersProvider {
     name: "adrian vatchinsky",
     email: "avatchinsky@outlook.com",
     permission: {
-      userType: "recruiter",
-      affiliation: null
+      userType: "student",
+      affiliation: {
+        id: 'ct2',
+        name: 'cornell tech2',
+        description: 'yolo',
+        link: null,
+        logo: null
+      }
     },
     jobs: [
-      {
-        id: 'stusfdffsd',
-        title: 'something',
-        description: `
-        RegExr v3 was created by gskinner.com, and is proudly hosted by Media Temple.
-
-        Edit the Expression & Text to see matches. Roll over matches or the expression for details. PCRE & Javascript flavors of RegEx are supported.
-
-        The side bar includes a Cheatsheet, full Reference, and Help. You can also Save & Share with the Community, and view patterns you create or favorite in My Patterns.
-
-        Explore results with the Tools below. Replace & List output custom results. Details lists capture groups. Explain describes your expression in plain English.
-
-        `,
-        location: 'nevada',
-        company: {
-          id: 'ct2',
-          name: 'cornell tech2',
-          description: 'yolo',
-          link: null,
-          logo: null
-        },
-        requirements: {
-          id: 'sesodnsdsdsd',
-          visa: 'visa1',
-          balla: true
-        },
-        session: null
-      },
+      'stusfdffsd',
+      '-L4IF5Rjksb2dXDMK9_7'
     ]
   }
 
@@ -179,13 +159,23 @@ export class UsersProvider {
 
   fetchMyPermissions$():Observable<Permission> {
     return this.fetchMe$()
-      .filter((payload) => 
+      .filter((payload) =>
         payload && payload !== undefined)
-      .map((payload) => 
+      .map((payload) =>
         payload.permission);
   }
 
+  fetchMyFavoriteJobs$():Observable<string[]> {
+    return this.fetchMe$()
+    .filter((payload) =>
+      payload && payload !== undefined)
+    .map((payload) => payload.jobs);
+  }
+
   favoriteJob(job:Job):void {
+    // TODO: get the real thing
+    const itemRef = this.db.list('users/-L4H-kHZgpbUUDz1pmv9/jobs');
+    itemRef.push(job.id);
     // this.me.jobs = [job, ...this.me.jobs];
   }
 
@@ -194,7 +184,8 @@ export class UsersProvider {
   }
 
   isFavoritedJob(job:Job):boolean {
-    return this.me.jobs.some((payload) => payload.id === job.id);
+    return false;
+    // return this.me.jobs.some((payload:string) => payload === job.id);
   }
 
 }

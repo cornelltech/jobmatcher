@@ -3,6 +3,9 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 
+import { Job } from '../../models/job';
+
+import { JobsProvider } from '../../providers/jobs/jobs';
 import { UsersProvider } from '../../providers/users/users';
 /**
  * Generated class for the AddListingPage page.
@@ -23,8 +26,11 @@ import { UsersProvider } from '../../providers/users/users';
 export class AddListingPage {
   form:FormGroup;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,
-    private fb:FormBuilder, private usersProvider:UsersProvider) {
+  constructor(public navCtrl: NavController,
+    public navParams: NavParams,
+    private fb:FormBuilder,
+    private usersProvider:UsersProvider,
+    private jobsProvider:JobsProvider) {
       this.createForm();
   }
 
@@ -45,7 +51,12 @@ export class AddListingPage {
   onFormSubmit():void {
     this.usersProvider.fetchMyPermissions$().subscribe((payload) => {
       const jobData = {companyId: payload.affiliation.id, formValue: this.form.value};
-      console.log(jobData);
+
+      const job:Job = Object.assign({}, this.form.value, {
+        company: payload.affiliation
+      });
+      console.log(job);
+      this.jobsProvider.createJobListing(job);
     })
     this.form.reset();
   }
