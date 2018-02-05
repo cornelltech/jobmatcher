@@ -53,12 +53,16 @@ export class JobDetailPage {
 
   favoritesIcon:string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,
-    public modalCtrl: ModalController, private jobsProvider: JobsProvider, private usersProvider: UsersProvider) {
+  constructor(public navCtrl: NavController,
+    public navParams: NavParams,
+    public modalCtrl: ModalController,
+    private jobsProvider: JobsProvider,
+    private usersProvider: UsersProvider) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad JobDetailPage');
+    console.log('data id', this.navParams.data.id);
 
     this.job$ = this.jobsProvider
       .fetchJob$(this.navParams.data.id);
