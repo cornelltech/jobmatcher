@@ -21,10 +21,12 @@ import { User } from '../../models/user';
 
 @Injectable()
 export class AuthProvider {
-
+    
+    currentUser$:Observable<any>;
     hasValidSession$:Observable<boolean>;
 
     constructor(public afAuth: AngularFireAuth, private toastCtrl: ToastController, private users:UsersProvider) {
+        this.currentUser$ = of(this.afAuth.auth.currentUser);
         this.hasValidSession$ = this.afAuth.authState
             .map((payload) => payload && payload !== undefined);
     }
