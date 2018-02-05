@@ -210,13 +210,8 @@ export class UsersProvider {
   }
 
   isFavoritedJob(job:Job):boolean {
-<<<<<<< HEAD
     return false;
     // return this.me.jobs.some((payload:string) => payload === job.id);
-=======
-    // return this.me.jobs.some((payload) => payload.id === job.id);
-    return false;
->>>>>>> 060d86bb43d253d2a1c5d8ca92955fd5b80c5a3b
   }
 
 }
