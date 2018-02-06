@@ -32,14 +32,18 @@ export class JobListingPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public modalCtrl: ModalController, private jobsProvider: JobsProvider) {
+      console.log('faves?', this.navParams.data.faves)
       this.faves = this.navParams.data.faves;
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad JobListingPage');
     if(this.faves) {
+      console.log('call fave page');
       this.jobs$ = this.jobsProvider.fetchMyFavoriteJobs$();
+      // this.jobs$.subscribe(() => {});
     } else {
+      console.log('not fave page');
       this.jobs$ = this.jobsProvider.fetchJobs$();
     }
   }

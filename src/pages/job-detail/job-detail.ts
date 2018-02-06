@@ -96,11 +96,13 @@ export class JobDetailPage {
 
     this.job$.takeUntil(this.ngUnsubscribe).subscribe((payload) =>
       {
-        if(this.usersProvider.isFavoritedJob(payload)) {
-          this.favoritesIcon = "star";
-        } else {
-          this.favoritesIcon = "star-outline";
-        }
+        this.usersProvider.isFavoritedJob$(payload.id).subscribe((payload) => {
+          if(payload) {
+            this.favoritesIcon = "star";
+          } else {
+            this.favoritesIcon = "star-outline";
+          }
+        })
       });
   }
 
@@ -140,9 +142,19 @@ export class JobDetailPage {
 
   addFavorite() {
     this.job$
-      .takeUntil(this.ngUnsubscribe)
-      .subscribe((payload => this.usersProvider.favoriteJob(payload)));
-    console.log('added fave');
+      .take(1)
+      .subscribe((payload => {
+        console.log('about:', payload.id);
+        this.usersProvider.isFavoritedJob$(payload.id).take(1).subscribe((isFave => {
+          if(isFave) {
+            console.log("unfavoriting job", payload.id);
+            this.usersProvider.unfavoriteJob(payload.id);
+          } else {
+            console.log("favoriting job", payload.id);
+            this.usersProvider.favoriteJob(payload.id);
+          }
+        }))
+      }));
   }
 
   get requirementsSectionArrow():string {

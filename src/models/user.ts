@@ -6,7 +6,7 @@ export interface User{
   name: string;
   email: string;
   permission: Permission;
-  jobs: string[];
+  jobs: any;
 }
 
 export interface Student extends User {

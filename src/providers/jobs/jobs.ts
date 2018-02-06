@@ -55,9 +55,12 @@ export class JobsProvider {
           ({jobs, ids})
         )
         .map(payload =>
-          payload.jobs
+          {console.log('fave jobs', payload)
+            return payload.jobs
             .filter((job) =>
-              payload.ids.indexOf(job.id) > -1));
+              (payload.ids
+                && payload.ids != undefined
+                && payload.ids.indexOf(job.id) > -1))});
   }
 
   createJobListing(job:Job) {
