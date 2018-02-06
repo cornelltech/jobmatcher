@@ -26,52 +26,6 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 */
 @Injectable()
 export class UsersProvider {
-  // me:User = {
-  //   id: "xvw8wwboqAfr9609pReU9FRIAtN2",
-  //   name: "adrian vatchinsky",
-  //   email: "avatchinsky@outlook.com",
-  //   permission: {
-  //     userType: "student",
-  //     affiliation: {
-  //       id: 'ct',
-  //       name: 'cornell tech2',
-  //       description: 'yolo',
-  //       link: null,
-  //       logo: null
-  //     }
-  //   },
-  //   jobs: [
-  //     {
-  //       id: 'stusfdffsd',
-  //       title: 'something',
-  //       description: `
-  //       RegExr v3 was created by gskinner.com, and is proudly hosted by Media Temple.
-
-  //       Edit the Expression & Text to see matches. Roll over matches or the expression for details. PCRE & Javascript flavors of RegEx are supported.
-
-  //       The side bar includes a Cheatsheet, full Reference, and Help. You can also Save & Share with the Community, and view patterns you create or favorite in My Patterns.
-
-  //       Explore results with the Tools below. Replace & List output custom results. Details lists capture groups. Explain describes your expression in plain English.
-
-  //       `,
-  //       location: 'nevada',
-  //       company: {
-  //         id: 'ct2',
-  //         name: 'cornell tech2',
-  //         description: 'yolo',
-  //         link: null,
-  //         logo: null
-  //       },
-  //       requirements: {
-  //         id: 'sesodnsdsdsd',
-  //         visa: 'visa1',
-  //         balla: true
-  //       },
-  //       session: null
-  //     },
-  //   ]
-  // }
-
   list$:Observable<any>;
 
   recruiters:User[] = []
@@ -204,9 +158,7 @@ export class UsersProvider {
   fetchMe$():Observable<User> {
     const uid:string = this.afAuth.auth.currentUser ?
       this.afAuth.auth.currentUser.uid : '';
-
     return this.lookup$(uid);
-    // return of(this.me);
   }
 
   fetchMyPermissions$():Observable<Permission> {
