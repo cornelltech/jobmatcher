@@ -98,10 +98,10 @@ export class UsersProvider {
     this.list$ = db.list('list').valueChanges();
   }
 
-  lookup$(id:string):Observable<User> {
+  lookup$(uid:string):Observable<User> {
     return this.db
       .list('/users',
-          ref => ref.orderByChild('id').equalTo(id)
+          ref => ref.orderByChild('uid').equalTo(uid)
       )
       .valueChanges()
       .map((payload:User[]) =>
