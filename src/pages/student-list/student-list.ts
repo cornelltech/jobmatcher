@@ -51,7 +51,7 @@ export class StudentListPage {
   goToDetail(evt:any, student:Student):void {
     console.log('clicked student detail')
     console.log(evt)
-    this.navCtrl.push('student-detail-page', { id: student.id })
+    this.navCtrl.push('student-detail-page', { id: student.uid })
   }
 
   openModal():void {

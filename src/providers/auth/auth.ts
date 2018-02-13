@@ -21,7 +21,6 @@ import { User } from '../../models/user';
 
 @Injectable()
 export class AuthProvider {
-    
     currentUser$:Observable<any>;
     hasValidSession$:Observable<boolean>;
 
@@ -39,7 +38,7 @@ export class AuthProvider {
             .then((payload) => {
                 const uid:string = payload.user ? payload.user.uid : null;
                 const obj:User = {
-                    id: uid,
+                    uid: uid,
                     name: name,
                     email: email,
                     permission: {

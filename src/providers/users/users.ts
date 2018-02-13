@@ -35,7 +35,7 @@ export class UsersProvider {
 
   students:Student[] = [
     {
-      id: 'abcde',
+      uid: 'abcde',
       name: 's do',
       email: 'jon@example.com',
       permission: {
@@ -54,7 +54,7 @@ export class UsersProvider {
       resumeLink: 'https://angular-mfppay.stackblitz.io/'
     },
     {
-      id: 'abcdefffffffff',
+      uid: 'abcdefffffffff',
       name: 'jon do',
       email: 'jon@example.com',
       permission: {
@@ -67,7 +67,7 @@ export class UsersProvider {
       resumeLink: 'https://angular-mfppay.stackblitz.io/'
     },
     {
-      id: 'abcadfdsdde',
+      uid: 'abcadfdsdde',
       name: 'jane do',
       email: 'jane@example.com',
       permission: {
@@ -80,7 +80,7 @@ export class UsersProvider {
       resumeLink: 'https://angular-mfppay.stackblitz.io/'
     },
     {
-      id: 'adfdsdde',
+      uid: 'adfdsdde',
       name: 'lo do',
       email: 'lo@example.com',
       permission: {
@@ -123,7 +123,7 @@ export class UsersProvider {
           return { key, ...data };
         })
         .find((payload) => {
-          return payload.id === id
+          return payload.uid === id
         })
       })
       .map((payload) => {
@@ -151,7 +151,7 @@ export class UsersProvider {
 
   fetchStudent$(key: string):Observable<Student> {
     const item:Student = this.students
-      .find((obj) => obj.id === key);
+      .find((obj) => obj.uid === key);
     return of(item);
   }
 
@@ -172,7 +172,7 @@ export class UsersProvider {
   fetchMyFavoriteJobs$():Observable<any[]> {
     return this.fetchMe$()
       .switchMap((payload) => {
-        return this.fetchUserKey$(payload.id)
+        return this.fetchUserKey$(payload.uid)
       })
       .switchMap((userKey) => {
         const itemRef = this.db.list(`users/${userKey}/jobs`);
@@ -224,7 +224,7 @@ export class UsersProvider {
   isFavoritedJob$(id:string):Observable<boolean> {
     return this.fetchMe$()
       .switchMap((payload) => {
-        return this.fetchUserKey$(payload.id)
+        return this.fetchUserKey$(payload.uid)
       })
       .switchMap((userKey) => {
         const itemRef = this.db.list(`users/${userKey}/jobs`);

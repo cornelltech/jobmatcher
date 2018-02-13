@@ -126,7 +126,7 @@ export class TabsPage {
           title: 'Profile',
           icon: 'document',
           view: StudentDetailPage,
-          params: {id: user.id}
+          params: {id: user.uid}
         }
       ];
     }

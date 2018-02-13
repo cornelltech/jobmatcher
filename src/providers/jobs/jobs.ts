@@ -21,9 +21,6 @@ import { UsersProvider } from '../../providers/users/users';
 @Injectable()
 export class JobsProvider {
   jobs$:Observable<Job[]>;
-  faveJobs:string[] = [
-    'stusfdffsd',
-  ]
 
   constructor(private db: AngularFireDatabase, private usersProvider: UsersProvider) {
     console.log('Hello JobsProvider Provider');

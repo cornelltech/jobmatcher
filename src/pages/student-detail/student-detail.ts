@@ -51,7 +51,7 @@ export class StudentDetailPage {
       )
       .filter((payload) => payload.me && payload.me !== undefined)
       .map((payload) =>
-      payload.currentPageStudent.id === payload.me.id)
+      payload.currentPageStudent.uid === payload.me.uid)
 
   }
 
