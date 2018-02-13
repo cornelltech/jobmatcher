@@ -21,54 +21,6 @@ import { UsersProvider } from '../../providers/users/users';
 @Injectable()
 export class JobsProvider {
   jobs$:Observable<Job[]>;
-  jobs: Job[] = [
-    {
-      id: 'stusfdffsd',
-      title: 'something',
-      description: `
-      RegExr v3 was created by gskinner.com, and is proudly hosted by Media Temple.
-
-      Edit the Expression & Text to see matches. Roll over matches or the expression for details. PCRE & Javascript flavors of RegEx are supported.
-
-      The side bar includes a Cheatsheet, full Reference, and Help. You can also Save & Share with the Community, and view patterns you create or favorite in My Patterns.
-
-      Explore results with the Tools below. Replace & List output custom results. Details lists capture groups. Explain describes your expression in plain English.
-
-      `,
-      location: 'nevada',
-      company: {
-        id: 'ct2',
-        name: 'cornell tech2',
-        description: 'yolo',
-        link: null,
-        logo: null
-      },
-      requirements: {
-        id: 'sesodnsdsdsd',
-        visa: 'visa1',
-        balla: true
-      },
-      session: null
-    },
-    {
-      id: 'stusfdffsdssd',
-      title: 'something else',
-      description: 'here is a thing to do',
-      location: 'nevada',
-      company: {
-        id: 'ct',
-        name: 'cornell tech',
-        description: 'yolo',
-        link: null,
-        logo: null
-      },
-      requirements: {
-        id: 'sesodnsdsdsdsassasaa',
-        visa: 'visa3'
-      },
-      session: null
-    }
-  ]
   faveJobs:string[] = [
     'stusfdffsd',
   ]
@@ -91,9 +43,8 @@ export class JobsProvider {
   }
 
   fetchJob$(key:string):Observable<Job> {
-    const item:Job = this.jobs
-      .find((obj) => obj.id === key);
-    return of(item);
+    return this.jobs$.map((jobs) =>
+      jobs.find((job) => job.id === key));
   }
 
   fetchMyFavoriteJobs$():Observable<Job[]> {
@@ -104,9 +55,12 @@ export class JobsProvider {
           ({jobs, ids})
         )
         .map(payload =>
-          payload.jobs
+          {console.log('fave jobs', payload)
+            return payload.jobs
             .filter((job) =>
-              payload.ids.indexOf(job.id) > -1));
+              (payload.ids
+                && payload.ids != undefined
+                && payload.ids.indexOf(job.id) > -1))});
   }
 
   createJobListing(job:Job) {

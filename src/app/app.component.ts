@@ -42,6 +42,7 @@ export class MyApp {
               // has valid session
               const uid:string = auth.afAuth.auth.currentUser.uid;
               userProvider.lookup$(uid)
+                .take(1)
                 .subscribe((payload:User) => {
                   this.nav.setRoot(TabsPage, {
                     me: payload

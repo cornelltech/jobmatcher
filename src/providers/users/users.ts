@@ -26,55 +26,12 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 */
 @Injectable()
 export class UsersProvider {
-  // me:User = {
-  //   id: "xvw8wwboqAfr9609pReU9FRIAtN2",
-  //   name: "adrian vatchinsky",
-  //   email: "avatchinsky@outlook.com",
-  //   permission: {
-  //     userType: "student",
-  //     affiliation: {
-  //       id: 'ct',
-  //       name: 'cornell tech2',
-  //       description: 'yolo',
-  //       link: null,
-  //       logo: null
-  //     }
-  //   },
-  //   jobs: [
-  //     {
-  //       id: 'stusfdffsd',
-  //       title: 'something',
-  //       description: `
-  //       RegExr v3 was created by gskinner.com, and is proudly hosted by Media Temple.
-
-  //       Edit the Expression & Text to see matches. Roll over matches or the expression for details. PCRE & Javascript flavors of RegEx are supported.
-
-  //       The side bar includes a Cheatsheet, full Reference, and Help. You can also Save & Share with the Community, and view patterns you create or favorite in My Patterns.
-
-  //       Explore results with the Tools below. Replace & List output custom results. Details lists capture groups. Explain describes your expression in plain English.
-
-  //       `,
-  //       location: 'nevada',
-  //       company: {
-  //         id: 'ct2',
-  //         name: 'cornell tech2',
-  //         description: 'yolo',
-  //         link: null,
-  //         logo: null
-  //       },
-  //       requirements: {
-  //         id: 'sesodnsdsdsd',
-  //         visa: 'visa1',
-  //         balla: true
-  //       },
-  //       session: null
-  //     },
-  //   ]
-  // }
-
   list$:Observable<any>;
 
   recruiters:User[] = []
+  faveJobs:string[] = [
+    '-L4IF5Rjksb2dXDMK9_7',
+  ]
 
   students:Student[] = [
     {
@@ -150,7 +107,30 @@ export class UsersProvider {
       .map((payload:User[]) =>
         payload.length > 0 ? payload[0] : null
       );
-    }
+  }
+
+  fetchUserKey$(id:string):Observable<string> {
+    console.log("in fetchuserkey");
+    return this.db
+      .list('/users',
+            ref => ref.orderByChild('id').equalTo(id)
+          )
+      .snapshotChanges()
+      .map((actions) => {
+        return actions.map(a => {
+          const data = a.payload.val() as User;
+          const key = a.payload.key;
+          return { key, ...data };
+        })
+        .find((payload) => {
+          return payload.id === id
+        })
+      })
+      .map((payload) => {
+        return payload.key;
+      });
+  }
+
 
   create(user:User):void {
     const itemRef = this.db.list('users');
@@ -178,9 +158,7 @@ export class UsersProvider {
   fetchMe$():Observable<User> {
     const uid:string = this.afAuth.auth.currentUser ?
       this.afAuth.auth.currentUser.uid : '';
-
     return this.lookup$(uid);
-    // return of(this.me);
   }
 
   fetchMyPermissions$():Observable<Permission> {
@@ -191,27 +169,68 @@ export class UsersProvider {
         payload.permission);
   }
 
-  fetchMyFavoriteJobs$():Observable<string[]> {
+  fetchMyFavoriteJobs$():Observable<any[]> {
     return this.fetchMe$()
-    .filter((payload) =>
-      payload && payload !== undefined)
-    .map((payload) => payload.jobs);
+      .switchMap((payload) => {
+        return this.fetchUserKey$(payload.id)
+      })
+      .switchMap((userKey) => {
+        const itemRef = this.db.list(`users/${userKey}/jobs`);
+        itemRef.valueChanges().subscribe((payload) => console.log(payload));
+        return itemRef.valueChanges();
+    })
   }
 
-  favoriteJob(job:Job):void {
-    // TODO: get the real thing
-    const itemRef = this.db.list('users/-L4H-kHZgpbUUDz1pmv9/jobs');
-    itemRef.push(job.id);
-    // this.me.jobs = [job, ...this.me.jobs];
+  favoriteJob(id:string):void {
+    const uid:string = this.afAuth.auth.currentUser ?
+      this.afAuth.auth.currentUser.uid : '';
+
+    this.fetchUserKey$(uid).take(1).subscribe((userKey => {
+      const itemRef = this.db.list(`users/${userKey}/jobs`);
+      itemRef.valueChanges().take(1).subscribe((payload) => {
+        if(payload.indexOf(id) === -1) {
+          itemRef.push(id);
+          console.log("adding job", id)
+        } else {
+          console.log("job already exists in list, not adding")
+        }
+      })
+    }))
   }
 
-  unfavoriteJob(job:Job):void {
-    // this.me.jobs = this.me.jobs.filter((payload) => payload.id !== job.id);
+  unfavoriteJob(id:string):void {
+    const uid:string = this.afAuth.auth.currentUser ?
+      this.afAuth.auth.currentUser.uid : '';
+    this.fetchUserKey$(uid).take(1).subscribe((userKey => {
+      const itemRef = this.db.list(`users/${userKey}/jobs`);
+      itemRef.valueChanges().take(1).subscribe((payload) => {
+        if(payload.indexOf(id) === -1) {
+          console.log("job doesn't exist to unfavorite (how did you get here)", id)
+        } else {
+          console.log("deleting job", id)
+          this.fetchMe$().take(1).subscribe((payload) => {
+            Object.keys(payload.jobs).forEach((key) => {
+              if (payload.jobs[key] === id) {
+                console.log("deleting job", id, "from faves list, key", key);
+                itemRef.remove(key);
+              }
+            })
+          })
+        }
+      })
+    }))
   }
 
-  isFavoritedJob(job:Job):boolean {
-    return false;
-    // return this.me.jobs.some((payload:string) => payload === job.id);
+  isFavoritedJob$(id:string):Observable<boolean> {
+    return this.fetchMe$()
+      .switchMap((payload) => {
+        return this.fetchUserKey$(payload.id)
+      })
+      .switchMap((userKey) => {
+        const itemRef = this.db.list(`users/${userKey}/jobs`);
+        itemRef.valueChanges().take(1).subscribe((payload) => console.log(payload));
+        return itemRef.valueChanges().map((payload) => payload.indexOf(id) !== -1);
+      })
   }
 
 }

@@ -1,4 +1,5 @@
 import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/observable/combineLatest';
@@ -51,14 +52,18 @@ export class JobDetailPage {
   isOwner$:Observable<boolean>;
   isStudent$:Observable<boolean>;
 
-  favoritesIcon:string;
+  favoritesIcon:string = "star-outline";
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,
-    public modalCtrl: ModalController, private jobsProvider: JobsProvider, private usersProvider: UsersProvider) {
+  constructor(public navCtrl: NavController,
+    public navParams: NavParams,
+    public modalCtrl: ModalController,
+    private jobsProvider: JobsProvider,
+    private usersProvider: UsersProvider) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad JobDetailPage');
+    console.log('data id', this.navParams.data.id);
 
     this.job$ = this.jobsProvider
       .fetchJob$(this.navParams.data.id);
@@ -90,14 +95,15 @@ export class JobDetailPage {
       .map((payload) =>
         payload.company.id === payload.permissions.affiliation.id)
 
-    this.job$.takeUntil(this.ngUnsubscribe).subscribe((payload) =>
-      {
-        if(this.usersProvider.isFavoritedJob(payload)) {
-          this.favoritesIcon = "star";
-        } else {
-          this.favoritesIcon = "star-outline";
-        }
-      });
+    this.job$
+      .switchMap((payload) =>
+        this.usersProvider
+          .isFavoritedJob$(payload.id))
+          .map((payload) => payload ? "star" : "star-outline")
+          .takeUntil(this.ngUnsubscribe)
+          .subscribe((payload) => {
+            this.favoritesIcon = payload
+          });
   }
 
   ionViewDidLeave():void {
@@ -136,9 +142,20 @@ export class JobDetailPage {
 
   addFavorite() {
     this.job$
+      .take(1)
+      .mergeMap((job) => this.usersProvider.isFavoritedJob$(job.id).take(1),
+        (job, isFave:boolean) => ({job, isFave})
+      )
       .takeUntil(this.ngUnsubscribe)
-      .subscribe((payload => this.usersProvider.favoriteJob(payload)));
-    console.log('added fave');
+      .subscribe((payload => {
+        if(payload.isFave) {
+          console.log("unfavoriting job", payload.job.id);
+          this.usersProvider.unfavoriteJob(payload.job.id);
+        } else {
+          console.log("favoriting job", payload.job.id);
+          this.usersProvider.favoriteJob(payload.job.id);
+        }
+      }));
   }
 
   get requirementsSectionArrow():string {
