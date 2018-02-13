@@ -109,11 +109,11 @@ export class UsersProvider {
       );
   }
 
-  fetchUserKey$(id:string):Observable<string> {
+  fetchUserKey$(uid:string):Observable<string> {
     console.log("in fetchuserkey");
     return this.db
       .list('/users',
-            ref => ref.orderByChild('id').equalTo(id)
+            ref => ref.orderByChild('uid').equalTo(uid)
           )
       .snapshotChanges()
       .map((actions) => {
@@ -123,7 +123,7 @@ export class UsersProvider {
           return { key, ...data };
         })
         .find((payload) => {
-          return payload.uid === id
+          return payload.uid === uid
         })
       })
       .map((payload) => {
