@@ -51,6 +51,7 @@ export class JobDetailPage {
 
   isOwner$:Observable<boolean>;
   isStudent$:Observable<boolean>;
+  isFavoritedJob$:Observable<boolean>;
 
   favoritesIcon:string = "star-outline";
 
@@ -70,6 +71,9 @@ export class JobDetailPage {
 
     this.company$ = this.job$
       .map((payload) => payload.company);
+
+
+    this.isFavoritedJob$ = this.usersProvider.isFavoritedJob$(this.navParams.data.id);
 
     this.requirement$ = this.job$
       .map((payload) => payload.requirements);

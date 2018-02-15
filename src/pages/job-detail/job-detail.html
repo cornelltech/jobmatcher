@@ -54,10 +54,8 @@
               </button>
             </ion-list-header>
 
-            <ion-item *ngFor="let item of requirementItems$ | async">
-              <ion-icon item-start name="checkmark-circle-outline"></ion-icon>
-              {{ item.key }} - {{ item.value }}
-            </ion-item>
+            <ion-icon item-start name="checkmark-circle-outline"></ion-icon>
+            {{ requirement$ | async }}
 
             <!-- Interested People -->
             <ion-list-header *ngIf="isOwner$ | async">
@@ -69,9 +67,10 @@
 
           </ion-list>
 
-          <button ion-button block round icon-start *ngIf="!(isOwner$ | async)">
-            <ion-icon name="star"></ion-icon>
-            I'm Interested!
+          <button ion-button block round icon-start (click)="addFavorite()" *ngIf="!(isOwner$ | async) && (isStudent$ | async)">
+            <ion-icon [name]="favoritesIcon"></ion-icon>
+            <p *ngIf="isFavoritedJob$ | async"> I'm Interested! </p>
+            <p *ngIf="!(isFavoritedJob$ | async)"> Mark as favorite </p>
           </button>
 
       </ion-col>
