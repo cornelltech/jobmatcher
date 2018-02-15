@@ -29,8 +29,8 @@ export class JobsProvider {
       .map((actions) => {
         return actions.map(a => {
           const data = a.payload.val() as Job;
-          const id = a.payload.key;
-          return { id, ...data };
+          data.id = a.payload.key;
+          return data;
         })
       });
   }
@@ -61,6 +61,7 @@ export class JobsProvider {
   }
 
   createJobListing(job:Job) {
+    console.log('job=', job);
     const itemRef = this.db.list('jobs');
     itemRef.push(job);
   }

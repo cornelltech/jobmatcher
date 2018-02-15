@@ -2,7 +2,7 @@ import {Permission} from './permission';
 import {Job} from './job';
 
 export interface User{
-  // id:string;
+  id?:string;
   uid:string;
   name: string;
   email: string;
