@@ -65,6 +65,15 @@
               </button>
             </ion-list-header>
 
+            <ion-list *ngIf="isOwner$ | async">
+              <button ion-item
+                *ngFor="let student of interestedStudents$ | async"
+                (click)="goToStudent($event, student)">
+                <h2>{{ student.name }}</h2>
+                <h3>{{ student.program }} &middot; {{ student.year }} </h3>
+              </button>
+            </ion-list>
+
           </ion-list>
 
           <button ion-button block round icon-start (click)="addFavorite()" *ngIf="!(isOwner$ | async) && (isStudent$ | async)">

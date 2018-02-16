@@ -89,12 +89,19 @@ export class UsersProvider {
   }
 
   // TODO: add filter for favorite jobs, probably need to change isFavoritedJob
-  fetchStudents$(job:Job=null):Observable<Student[]> {
+  fetchStudents$():Observable<Student[]> {
     return this.users$
       .map((users) => users
         .filter((user) => user.permission.userType === 'student')
         .map((student) => student as Student))
   }
+
+  fetchInterestedStudents$(jobId:string):Observable<Student[]> {
+    return this.fetchStudents$()
+      .map((students) => students
+        .filter((student) => this.isFavoritedJob$(jobId, student.uid)));
+  }
+
 
   // TODO: add filter for companies, need to add company data first...
   fetchRecruiters$(company:Company=null):Observable<User[]> {
@@ -104,10 +111,10 @@ export class UsersProvider {
         // .filter((payload) => payload.permission.affiliation.id === company.id))
   }
 
-  fetchStudent$(key: string):Observable<Student> {
+  fetchStudent$(uid: string):Observable<Student> {
     return this.fetchStudents$()
       .map((students) => students
-        .find((student) => student.uid === key));
+        .find((student) => student.uid === uid));
   }
 
   fetchMe$():Observable<User> {
@@ -176,8 +183,9 @@ export class UsersProvider {
     }))
   }
 
-  isFavoritedJob$(id:string):Observable<boolean> {
-    return this.fetchMe$()
+  isFavoritedJob$(id:string, studentUid:string=null):Observable<boolean> {
+    let user = (studentUid == null) ? this.fetchMe$() : this.fetchStudent$(studentUid);
+    return user
       .switchMap((payload) => {
         return this.fetchUserKey$(payload.uid)
       })

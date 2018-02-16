@@ -47,7 +47,7 @@ export class JobDetailPage {
   company$:Observable<Company>;
   requirement$:Observable<Requirement>;
   requirementItems$:Observable<{key:string, value:any}[]>;
-  students:Observable<Student[]>;
+  interestedStudents$:Observable<Student[]>;
 
   isOwner$:Observable<boolean>;
   isStudent$:Observable<boolean>;
@@ -85,6 +85,9 @@ export class JobDetailPage {
         .map((key) => ({key:key, value:payload[key]}))
       );
 
+    this.interestedStudents$ = this.usersProvider
+      .fetchInterestedStudents$(this.navParams.data.id);
+
     this.isStudent$ = this.usersProvider
       .fetchMyPermissions$()
       .map((payload) => payload.userType == "student");
@@ -97,6 +100,7 @@ export class JobDetailPage {
             ({company, permissions})
       )
       .map((payload) =>
+        payload.permissions.userType === 'administrator' || // admins own everything
         payload.company.id === payload.permissions.affiliation.id)
 
     this.job$
@@ -130,7 +134,6 @@ export class JobDetailPage {
         this.navCtrl.push('company-detail-page', {id: payload})
       )
   }
-
 
   toggleRequirementsCollapse():void {
     this.isRequirementsSectionCollapsed = !this.isRequirementsSectionCollapsed;
