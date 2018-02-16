@@ -36,20 +36,29 @@ export class UsersProvider {
         return actions.map(a => {
           const data = a.payload.val() as User;
           data.id = a.payload.key;
-          return data;
+          return data as User;
         })
       });
   }
 
   lookup$(uid:string):Observable<User> {
-    return this.db
-      .list('/users',
-          ref => ref.orderByChild('uid').equalTo(uid)
-      )
-      .valueChanges()
-      .map((payload:User[]) =>
-        payload.length > 0 ? payload[0] : null
-      );
+    return this.users$
+      .map((users) => users
+        .find((user) => user.uid === uid));
+    // return this.db
+    //   .list('/users',
+    //       ref => ref.orderByChild('uid').equalTo(uid)
+    //   )
+    //   .valueChanges()
+    //   .map((payload:User[]) =>
+    //     payload.length > 0 ? payload[0] : null
+    //   );
+  }
+
+  lookupById$(key:string):Observable<User> {
+    return this.users$
+      .map((users) => users
+        .find((user) => user.id === key));
   }
 
   fetchUserKey$(uid:string):Observable<string> {
