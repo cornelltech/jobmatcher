@@ -27,93 +27,44 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 @Injectable()
 export class UsersProvider {
   list$:Observable<any>;
-
-  recruiters:User[] = []
-  faveJobs:string[] = [
-    '-L4IF5Rjksb2dXDMK9_7',
-  ]
-
-  students:Student[] = [
-    {
-      id: 'abcde',
-      name: 's do',
-      email: 'jon@example.com',
-      permission: {
-        userType: 'student',
-        affiliation: {
-          id: 'ct',
-          name: 'cornell tech',
-          description: 'yolo',
-          link: null,
-          logo: null
-        },
-      },
-      jobs: [],
-      year: 2019,
-      program: 'LLM',
-      resumeLink: 'https://angular-mfppay.stackblitz.io/'
-    },
-    {
-      id: 'abcdefffffffff',
-      name: 'jon do',
-      email: 'jon@example.com',
-      permission: {
-        userType: 'student',
-        affiliation: null
-      },
-      jobs: [],
-      year: 2018,
-      program: 'CS',
-      resumeLink: 'https://angular-mfppay.stackblitz.io/'
-    },
-    {
-      id: 'abcadfdsdde',
-      name: 'jane do',
-      email: 'jane@example.com',
-      permission: {
-        userType: 'student',
-        affiliation: null
-      },
-      jobs: [],
-      year: 2018,
-      program: 'LLM',
-      resumeLink: 'https://angular-mfppay.stackblitz.io/'
-    },
-    {
-      id: 'adfdsdde',
-      name: 'lo do',
-      email: 'lo@example.com',
-      permission: {
-        userType: 'student',
-        affiliation: null
-      },
-      jobs: [],
-      year: 2019,
-      program: 'ORIE',
-      resumeLink: 'https://angular-mfppay.stackblitz.io/'
-    }
-  ]
+  users$:Observable<User[]>;
 
   constructor(public db: AngularFireDatabase, public afAuth: AngularFireAuth) {
     this.list$ = db.list('list').valueChanges();
+    this.users$ = db.list('users').snapshotChanges()
+      .map((actions) => {
+        return actions.map(a => {
+          const data = a.payload.val() as User;
+          data.id = a.payload.key;
+          return data as User;
+        })
+      });
   }
 
-  lookup$(id:string):Observable<User> {
-    return this.db
-      .list('/users',
-          ref => ref.orderByChild('id').equalTo(id)
-      )
-      .valueChanges()
-      .map((payload:User[]) =>
-        payload.length > 0 ? payload[0] : null
-      );
+  lookup$(uid:string):Observable<User> {
+    return this.users$
+      .map((users) => users
+        .find((user) => user.uid === uid));
+    // return this.db
+    //   .list('/users',
+    //       ref => ref.orderByChild('uid').equalTo(uid)
+    //   )
+    //   .valueChanges()
+    //   .map((payload:User[]) =>
+    //     payload.length > 0 ? payload[0] : null
+    //   );
   }
 
-  fetchUserKey$(id:string):Observable<string> {
-    console.log("in fetchuserkey");
+  lookupById$(key:string):Observable<User> {
+    return this.users$
+      .map((users) => users
+        .find((user) => user.id === key));
+  }
+
+  fetchUserKey$(uid:string):Observable<string> {
     return this.db
       .list('/users',
-            ref => ref.orderByChild('id').equalTo(id)
+            ref => ref.orderByChild('uid').equalTo(uid)
           )
       .snapshotChanges()
       .map((actions) => {
@@ -123,7 +74,7 @@ export class UsersProvider {
           return { key, ...data };
         })
         .find((payload) => {
-          return payload.id === id
+          return payload.uid === uid
         })
       })
       .map((payload) => {
@@ -137,22 +88,33 @@ export class UsersProvider {
     itemRef.push(user);
   }
 
-  fetchStudents$(job:Job=null):Observable<Student[]> {
-    return of(this.students)
+  // TODO: add filter for favorite jobs, probably need to change isFavoritedJob
+  fetchStudents$():Observable<Student[]> {
+    return this.users$
+      .map((users) => users
+        .filter((user) => user.permission.userType === 'student')
+        .map((student) => student as Student))
   }
 
+  fetchInterestedStudents$(jobId:string):Observable<Student[]> {
+    return this.fetchStudents$()
+      .map((students) => students
+        .filter((student) => this.isFavoritedJob$(jobId, student.uid)));
+  }
+
+
+  // TODO: add filter for companies, need to add company data first...
   fetchRecruiters$(company:Company=null):Observable<User[]> {
-    if(company) {
-      return of(this.recruiters
-        .filter((payload) => payload.permission.affiliation.id === company.id))
-    }
-    return of(this.recruiters)
+    return this.users$
+      .map((users) => users
+        .filter((user) => user.permission.userType === 'recruiter'))
+        // .filter((payload) => payload.permission.affiliation.id === company.id))
   }
 
-  fetchStudent$(key: string):Observable<Student> {
-    const item:Student = this.students
-      .find((obj) => obj.id === key);
-    return of(item);
+  fetchStudent$(uid: string):Observable<Student> {
+    return this.fetchStudents$()
+      .map((students) => students
+        .find((student) => student.uid === uid));
   }
 
   fetchMe$():Observable<User> {
@@ -172,7 +134,7 @@ export class UsersProvider {
   fetchMyFavoriteJobs$():Observable<any[]> {
     return this.fetchMe$()
       .switchMap((payload) => {
-        return this.fetchUserKey$(payload.id)
+        return this.fetchUserKey$(payload.uid)
       })
       .switchMap((userKey) => {
         const itemRef = this.db.list(`users/${userKey}/jobs`);
@@ -221,10 +183,11 @@ export class UsersProvider {
     }))
   }
 
-  isFavoritedJob$(id:string):Observable<boolean> {
-    return this.fetchMe$()
+  isFavoritedJob$(id:string, studentUid:string=null):Observable<boolean> {
+    let user = (studentUid == null) ? this.fetchMe$() : this.fetchStudent$(studentUid);
+    return user
       .switchMap((payload) => {
-        return this.fetchUserKey$(payload.id)
+        return this.fetchUserKey$(payload.uid)
       })
       .switchMap((userKey) => {
         const itemRef = this.db.list(`users/${userKey}/jobs`);

@@ -9,12 +9,18 @@
 
   <ion-navbar>
     <ion-title>Add job listing</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="openSettingsModal()">
+        <ion-icon name="settings"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+  {{ form.value | json }}
   <form [formGroup]="form" (ngSubmit)="onFormSubmit()">
     <ion-item>
       <ion-label for="title">Title</ion-label>

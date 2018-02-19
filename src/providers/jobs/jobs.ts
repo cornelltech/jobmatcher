@@ -21,9 +21,6 @@ import { UsersProvider } from '../../providers/users/users';
 @Injectable()
 export class JobsProvider {
   jobs$:Observable<Job[]>;
-  faveJobs:string[] = [
-    'stusfdffsd',
-  ]
 
   constructor(private db: AngularFireDatabase, private usersProvider: UsersProvider) {
     console.log('Hello JobsProvider Provider');
@@ -32,8 +29,8 @@ export class JobsProvider {
       .map((actions) => {
         return actions.map(a => {
           const data = a.payload.val() as Job;
-          const id = a.payload.key;
-          return { id, ...data };
+          data.id = a.payload.key;
+          return data;
         })
       });
   }
@@ -64,8 +61,14 @@ export class JobsProvider {
   }
 
   createJobListing(job:Job) {
-    const itemRef = this.db.list('jobs');
-    itemRef.push(job);
+    console.log('job=', job);
+    try {
+      const itemRef = this.db.list('jobs');
+      itemRef.push(job);
+      console.log('u did it');
+    } catch(error) {
+      console.log(error);
+    }
   }
 
 }

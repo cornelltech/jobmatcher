@@ -47,10 +47,11 @@ export class JobDetailPage {
   company$:Observable<Company>;
   requirement$:Observable<Requirement>;
   requirementItems$:Observable<{key:string, value:any}[]>;
-  students:Observable<Student[]>;
+  interestedStudents$:Observable<Student[]>;
 
   isOwner$:Observable<boolean>;
   isStudent$:Observable<boolean>;
+  isFavoritedJob$:Observable<boolean>;
 
   favoritesIcon:string = "star-outline";
 
@@ -71,6 +72,9 @@ export class JobDetailPage {
     this.company$ = this.job$
       .map((payload) => payload.company);
 
+
+    this.isFavoritedJob$ = this.usersProvider.isFavoritedJob$(this.navParams.data.id);
+
     this.requirement$ = this.job$
       .map((payload) => payload.requirements);
 
@@ -80,6 +84,9 @@ export class JobDetailPage {
         .filter((key) => (key !== 'id'))
         .map((key) => ({key:key, value:payload[key]}))
       );
+
+    this.interestedStudents$ = this.usersProvider
+      .fetchInterestedStudents$(this.navParams.data.id);
 
     this.isStudent$ = this.usersProvider
       .fetchMyPermissions$()
@@ -93,6 +100,7 @@ export class JobDetailPage {
             ({company, permissions})
       )
       .map((payload) =>
+        payload.permissions.userType === 'administrator' || // admins own everything
         payload.company.id === payload.permissions.affiliation.id)
 
     this.job$
@@ -114,7 +122,7 @@ export class JobDetailPage {
   goToStudent(evt:any, student:Student):void {
     console.log('clicked it')
     console.log(evt)
-    this.navCtrl.push('student-detail-page', { id: student.id })
+    this.navCtrl.push('student-detail-page', { id: student.uid })
   }
 
   goToCompany(evt:any):void {
@@ -126,7 +134,6 @@ export class JobDetailPage {
         this.navCtrl.push('company-detail-page', {id: payload})
       )
   }
-
 
   toggleRequirementsCollapse():void {
     this.isRequirementsSectionCollapsed = !this.isRequirementsSectionCollapsed;

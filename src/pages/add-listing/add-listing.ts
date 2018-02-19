@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 
 import { Job } from '../../models/job';
+
+
+import { SettingsModal } from '../../modals/settings-modal/settings-modal';
 
 import { JobsProvider } from '../../providers/jobs/jobs';
 import { UsersProvider } from '../../providers/users/users';
@@ -29,6 +32,7 @@ export class AddListingPage {
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     private fb:FormBuilder,
+    public modalCtrl: ModalController,
     private usersProvider:UsersProvider,
     private jobsProvider:JobsProvider) {
       this.createForm();
@@ -36,6 +40,11 @@ export class AddListingPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad AddListingPage');
+  }
+
+  openSettingsModal() {
+    const modal = this.modalCtrl.create(SettingsModal);
+    modal.present();
   }
 
   // Form Controls
@@ -49,16 +58,18 @@ export class AddListingPage {
   }
 
   onFormSubmit():void {
-    this.usersProvider.fetchMyPermissions$().subscribe((payload) => {
-      const jobData = {companyId: payload.affiliation.id, formValue: this.form.value};
-
+    // TODO: this is broken (the form) + also none of your users have companies rn
+    console.log('hello!!!');
+    this.usersProvider.fetchMyPermissions$().subscribe((permissions) => {
+      console.log('WHATS UP');
+      // const jobData = {companyId: permissions.affiliation.id, formValue: this.form.value};
+      console.log('form=', this.form.value);
       const job:Job = Object.assign({}, this.form.value, {
-        company: payload.affiliation
+        company: permissions.affiliation
       });
-      console.log(job);
       this.jobsProvider.createJobListing(job);
+      this.form.reset();
     })
-    this.form.reset();
   }
 
 }

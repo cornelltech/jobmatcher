@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-import {  NavParams, ViewController } from 'ionic-angular';
+import {  App, NavParams, ViewController } from 'ionic-angular';
 
 import { AuthProvider } from '../../providers/auth/auth';
 
@@ -17,13 +17,14 @@ import { AuthProvider } from '../../providers/auth/auth';
 })
 export class SettingsModal {
 
-    constructor(public navParams: NavParams,public viewCtrl: ViewController, private auth: AuthProvider) {}
+    constructor(public navParams: NavParams,public viewCtrl: ViewController, private auth: AuthProvider, private appCtrl: App) {}
 
     closeModal():void {
         this.viewCtrl.dismiss({});
     }
 
     onLogout():void {
+        this.appCtrl.getRootNavs()[0].setRoot('login-page');
         this.auth.logout();
         this.closeModal();
     }
