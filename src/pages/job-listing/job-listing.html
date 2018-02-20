@@ -26,10 +26,10 @@
           <button ion-item
             *ngFor="let item of jobs$ | async"
             (click)="goToDetail($event, item)">
-              <ion-avatar item-start (click)="goToCompany($event, item.company)">
+              <!-- We dont have this data TODO: think about handling it -->
+              <!-- <ion-avatar item-start (click)="goToCompany($event, item.company)">
                 <img [src]="(companyLogo$(item) | async) || 'http://via.placeholder.com/50x50'">
-              </ion-avatar>
-              <p>{{ (companyLogo$(item) | async) | json }}</p>
+              </ion-avatar> -->
               <h2>{{ item?.title }} </h2>
               <h3>{{ item.company?.name }} </h3>
               <p>{{ item?.description }}</p>

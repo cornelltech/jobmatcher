@@ -109,14 +109,4 @@ export class JobListingPage {
         payload.jobs.forEach((job) => itemRef.push(job));
       });
   }
-
-
-  companyLogo$(job:Job):Observable<string> {
-    return this.companies$
-      .map((companies) => 
-        companies.find((obj) => obj.id == job.company)
-      )
-      .map((payload) => payload ? payload.logo : 'http://via.placeholder.com/50x50')
-      
-  }
 }
