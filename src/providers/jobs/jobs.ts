@@ -61,13 +61,11 @@ export class JobsProvider {
   }
 
   createJobListing(job:Job) {
-    //console.log('job=', job);
     try {
       const itemRef = this.db.list('jobs');
       itemRef.push(job);
-      //console.log('u did it');
     } catch(error) {
-      //console.log(error);
+      console.log(error);
     }
   }
 
