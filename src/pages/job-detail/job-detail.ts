@@ -13,6 +13,7 @@ import { Student } from '../../models/user';
 import { Requirement } from '../../models/requirement';
 import { Permission } from '../../models/permission';
 
+import { CompaniesProvider } from '../../providers/companies/companies';
 import { JobsProvider } from '../../providers/jobs/jobs';
 import { UsersProvider } from '../../providers/users/users';
 
@@ -59,6 +60,7 @@ export class JobDetailPage {
     public navParams: NavParams,
     public modalCtrl: ModalController,
     private jobsProvider: JobsProvider,
+    private companiesProvider: CompaniesProvider,
     private usersProvider: UsersProvider) {
   }
 
@@ -70,8 +72,7 @@ export class JobDetailPage {
       .fetchJob$(this.navParams.data.id);
 
     this.company$ = this.job$
-      .map((payload) => payload.company);
-
+      .switchMap((payload) => this.companiesProvider.fetchCompany$(payload.company));
 
     this.isFavoritedJob$ = this.usersProvider.isFavoritedJob$(this.navParams.data.id);
 

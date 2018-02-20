@@ -10,6 +10,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 
 import { SettingsModal } from '../../modals/settings-modal/settings-modal';
 
+import { CompaniesProvider } from '../../providers/companies/companies';
 import { JobsProvider } from '../../providers/jobs/jobs';
 import { UsersProvider } from '../../providers/users/users';
 
@@ -36,30 +37,32 @@ export class JobListingPage {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   jobs$: Observable<Job[]>;
+  companies$: Observable<Company[]>;
   faves:boolean;
 
   constructor(public db: AngularFireDatabase, public navCtrl: NavController,
     public navParams: NavParams, public modalCtrl: ModalController,
+    private companiesProvider: CompaniesProvider,
     private jobsProvider: JobsProvider, private usersProvider: UsersProvider) {
       this.faves = this.navParams.data.faves;
   }
 
   ionViewDidLoad() {
-    if(this.faves) {
-      this.jobs$ = this.jobsProvider.fetchMyFavoriteJobs$();
-    } else {
-      this.usersProvider
-        .fetchMyPermissions$()
-        .takeUntil(this.ngUnsubscribe)
-        .subscribe((payload) => {
-          if(payload.userType === 'recruiter'){
-            this.jobs$ = this.jobsProvider.fetchJobsForCompany$(payload.affiliation)
-          }else{
-            this.jobs$ = this.jobsProvider.fetchJobs$()
-          }
-        })
-      
-    }
+    this.usersProvider
+      .fetchMyPermissions$()
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe((payload) => {
+        if(this.faves) {
+          this.jobs$ = this.jobsProvider.fetchMyFavoriteJobs$();
+        }
+        else if(payload.userType === 'recruiter'){
+          this.jobs$ = this.jobsProvider.fetchJobsForCompany$(payload.affiliation)
+        }else{
+          this.jobs$ = this.jobsProvider.fetchJobs$()
+        }
+      });
+
+    this.companies$ = this.companiesProvider.fetchCompanies$();
   }
 
   ionViewWillUnload():void {
@@ -73,11 +76,11 @@ export class JobListingPage {
     this.navCtrl.push('job-detail-page', { id: job.id })
   }
 
-  goToCompany(evt:any, company:Company):void {
+  goToCompany(evt:any, company:string):void {
     //console.log('clicked company')
     //console.log(evt)
     evt.stopPropagation();
-    this.navCtrl.push('company-detail-page', { id: company.id })
+    this.navCtrl.push('company-detail-page', { id: company })
   }
 
   openSettingsModal() {
@@ -107,4 +110,13 @@ export class JobListingPage {
       });
   }
 
+
+  companyLogo$(job:Job):Observable<string> {
+    return this.companies$
+      .map((companies) => 
+        companies.find((obj) => obj.id == job.company)
+      )
+      .map((payload) => payload ? payload.logo : 'http://via.placeholder.com/50x50')
+      
+  }
 }

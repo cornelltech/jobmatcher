@@ -23,10 +23,24 @@
   <ion-grid no-padding>
     <ion-row>
       <ion-col offset-md-2 col-md-8>
-        <h1> {{ (student$ | async)?.name }} </h1>
-        <h4> {{ (student$ | async)?.program }} &middot; {{ (student$ | async)?.year }} </h4>
-        <h4> <ion-icon name="mail"></ion-icon> {{ (student$ | async)?.email }} </h4>
-        <h4> <ion-icon name="document"></ion-icon> <a href="{{ (student$ | async)?.resumeLink }}">Resume</a> </h4>
+
+          <ion-card>
+            <ion-item>
+              <h2>{{ (student$ | async)?.name }}</h2>
+              <p>{{ (student$ | async)?.email }}</p>
+            </ion-item>
+            <!-- <ion-card-content>
+              <p>Wait a minute. Wait a minute, Doc. Uhhh... Are you telling me that you built a time machine... out of a DeLorean?! Whoa. This is heavy.</p>
+            </ion-card-content> -->
+            <ion-row>
+              <ion-col>
+                <button ion-button icon-left clear small>
+                  <ion-icon name="document"></ion-icon>
+                  <a href="{{ (student$ | async)?.resumeLink }}" target="_blank">Resume</a>
+                </button>
+              </ion-col>
+            </ion-row>
+          </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>

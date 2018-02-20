@@ -119,8 +119,7 @@ export class UsersProvider {
     return this.fetchMe$()
       .filter((payload) =>
         payload && payload !== undefined)
-      .map((payload) =>
-        payload.permission);
+      .map((payload) => payload.permission);
   }
 
   fetchMyFavoriteJobs$():Observable<any[]> {

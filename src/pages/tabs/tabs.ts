@@ -103,7 +103,7 @@ export class TabsPage {
           title: 'Profile',
           icon: 'briefcase',
           view: CompanyDetailPage,
-          params: {id: 'ct'}
+          params: {id: permissions.affiliation}
         }
       ];
 
