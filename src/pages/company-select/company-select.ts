@@ -57,9 +57,7 @@ export class CompanySelectPage {
     this.ngUnsubscribe.complete();
   }
 
-  onInput(evt:any){
-    console.log(this.q)
-  }
+  onInput(evt:any){ }
 
   createForm():void {
     this.form = this.fb.group({
