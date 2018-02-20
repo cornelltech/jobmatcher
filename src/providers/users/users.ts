@@ -45,14 +45,6 @@ export class UsersProvider {
     return this.users$
       .map((users) => users
         .find((user) => user.uid === uid));
-    // return this.db
-    //   .list('/users',
-    //       ref => ref.orderByChild('uid').equalTo(uid)
-    //   )
-    //   .valueChanges()
-    //   .map((payload:User[]) =>
-    //     payload.length > 0 ? payload[0] : null
-    //   );
   }
 
   lookupById$(key:string):Observable<User> {
@@ -194,6 +186,16 @@ export class UsersProvider {
         itemRef.valueChanges().take(1).subscribe((payload) => /**console.log(payload)*/{});
         return itemRef.valueChanges().map((payload) => payload.indexOf(id) !== -1);
       })
+  }
+
+  affiliate(orgId:string):void {
+    const uid:string = this.afAuth.auth.currentUser ?
+      this.afAuth.auth.currentUser.uid : '';
+
+    this.fetchUserKey$(uid).take(1).subscribe((userKey => {
+      const itemRef = this.db.object(`users/${userKey}/permission/affiliation`);
+      itemRef.set(orgId);
+    }));
   }
 
 }

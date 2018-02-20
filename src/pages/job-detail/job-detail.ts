@@ -101,7 +101,7 @@ export class JobDetailPage {
       )
       .map((payload) =>
         payload.permissions.userType === 'administrator' || // admins own everything
-        payload.company.id === payload.permissions.affiliation.id)
+        payload.company.id === payload.permissions.affiliation)
 
     this.job$
       .switchMap((payload) =>

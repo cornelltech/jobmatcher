@@ -50,7 +50,6 @@ export class CompaniesProvider {
     const payload:Company = {
         name,
     };
-
     itemRef.push(payload);
   }
 

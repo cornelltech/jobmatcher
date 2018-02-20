@@ -49,7 +49,7 @@ export class CompanyDetailPage {
             ({company, permissions})
       )
       .map((payload) =>
-        payload.company.id === payload.permissions.affiliation.id)
+        payload.company.id === payload.permissions.affiliation)
   }
 
   ionViewWillUnload():void {

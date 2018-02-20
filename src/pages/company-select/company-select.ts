@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
 import { CompaniesProvider } from '../../providers/companies/companies';
+import { UsersProvider } from '../../providers/users/users';
 
 import { Company } from '../../models/company'
 
@@ -35,6 +36,7 @@ export class CompanySelectPage {
     public navCtrl: NavController, 
     public navParams: NavParams,
     public modalCtrl: ModalController,
+    private usersProvider:UsersProvider,
     private companiesProvider:CompaniesProvider,
     private fb: FormBuilder) {
       this.createForm();
@@ -56,16 +58,26 @@ export class CompanySelectPage {
   createForm():void {
     this.form = this.fb.group({
         name: new FormControl('', [Validators.required]),
-    })
+    });
+  }
+
+  lookupAndAffiliateOrg(name:string):void {
+    this.companiesProvider.lookupCompany$(name)
+      .take(1)
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe((payload) => {
+        this.usersProvider.affiliate(payload.id);
+        this.navCtrl.setRoot('tabs-page');
+      });
   }
 
   onFormSubmit():void {
     const formModel = this.form.value;
-    console.log(formModel)
     this.companiesProvider.create(
       formModel.name,
     );
     this.createForm();
+    this.lookupAndAffiliateOrg(formModel.name);
   }
 
 }
