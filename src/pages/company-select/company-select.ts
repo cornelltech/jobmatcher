@@ -1,14 +1,18 @@
 import { Component } from '@angular/core';
+import { Location } from '@angular/common';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
+import { TabsPage } from '../tabs/tabs';
 import { CompaniesProvider } from '../../providers/companies/companies';
 import { UsersProvider } from '../../providers/users/users';
+import { AuthProvider } from '../../providers/auth/auth';
 
 import { Company } from '../../models/company'
+
 
 /**
  * Generated class for the CompanySelectPage page.
@@ -33,10 +37,12 @@ export class CompanySelectPage {
   companies$:Observable<Company[]>;
 
   constructor(
+    private location: Location,
     public navCtrl: NavController, 
     public navParams: NavParams,
     public modalCtrl: ModalController,
     private usersProvider:UsersProvider,
+    private auth: AuthProvider,
     private companiesProvider:CompaniesProvider,
     private fb: FormBuilder) {
       this.createForm();
@@ -61,14 +67,32 @@ export class CompanySelectPage {
     });
   }
 
-  lookupAndAffiliateOrg(name:string):void {
+  lookupAndAffiliateCompany(name:string):void {
     this.companiesProvider.lookupCompany$(name)
       .take(1)
       .takeUntil(this.ngUnsubscribe)
       .subscribe((payload) => {
         this.usersProvider.affiliate(payload.id);
-        this.navCtrl.setRoot('tabs-page');
+        this.goToApp();
       });
+  }
+
+  affiliateCompany(obj:Company):void {
+    this.usersProvider.affiliate(obj.id);
+    this.goToApp();
+  }
+
+  goToApp():void {
+    const uid:string = this.auth.afAuth.auth.currentUser.uid;
+    this.usersProvider.lookup$(uid)
+    .take(1)
+    .subscribe((payload) => {
+      this.location.go('app');
+      this.navCtrl.setRoot(TabsPage, {
+        me: payload
+      });
+    });
+    
   }
 
   onFormSubmit():void {
@@ -77,7 +101,7 @@ export class CompanySelectPage {
       formModel.name,
     );
     this.createForm();
-    this.lookupAndAffiliateOrg(formModel.name);
+    this.lookupAndAffiliateCompany(formModel.name);
   }
 
 }

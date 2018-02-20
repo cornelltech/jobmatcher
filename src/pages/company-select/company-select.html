@@ -39,7 +39,7 @@
           <ion-list-header>
             Select Organization
           </ion-list-header>
-          <button ion-item
+          <button ion-item (click)="affiliateCompany(item)"
             *ngFor="let item of companies$ | async">
             <ion-avatar item-start>
               <img [src]="item?.logo || 'http://via.placeholder.com/50x50'">
