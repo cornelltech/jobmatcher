@@ -39,7 +39,7 @@ export class AddListingPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad AddListingPage');
+    //console.log('ionViewDidLoad AddListingPage');
   }
 
   openSettingsModal() {
@@ -59,11 +59,11 @@ export class AddListingPage {
 
   onFormSubmit():void {
     // TODO: this is broken (the form) + also none of your users have companies rn
-    console.log('hello!!!');
+    //console.log('hello!!!');
     this.usersProvider.fetchMyPermissions$().subscribe((permissions) => {
-      console.log('WHATS UP');
+      //console.log('WHATS UP');
       // const jobData = {companyId: permissions.affiliation.id, formValue: this.form.value};
-      console.log('form=', this.form.value);
+      //console.log('form=', this.form.value);
       const job:Job = Object.assign({}, this.form.value, {
         company: permissions.affiliation
       });

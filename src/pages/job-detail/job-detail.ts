@@ -63,8 +63,8 @@ export class JobDetailPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad JobDetailPage');
-    console.log('data id', this.navParams.data.id);
+    //console.log('ionViewDidLoad JobDetailPage');
+    //console.log('data id', this.navParams.data.id);
 
     this.job$ = this.jobsProvider
       .fetchJob$(this.navParams.data.id);
@@ -120,8 +120,8 @@ export class JobDetailPage {
   }
 
   goToStudent(evt:any, student:Student):void {
-    console.log('clicked it')
-    console.log(evt)
+    //console.log('clicked it')
+    //console.log(evt)
     this.navCtrl.push('student-detail-page', { id: student.uid })
   }
 
@@ -156,10 +156,10 @@ export class JobDetailPage {
       .takeUntil(this.ngUnsubscribe)
       .subscribe((payload => {
         if(payload.isFave) {
-          console.log("unfavoriting job", payload.job.id);
+          //console.log("unfavoriting job", payload.job.id);
           this.usersProvider.unfavoriteJob(payload.job.id);
         } else {
-          console.log("favoriting job", payload.job.id);
+          //console.log("favoriting job", payload.job.id);
           this.usersProvider.favoriteJob(payload.job.id);
         }
       }));

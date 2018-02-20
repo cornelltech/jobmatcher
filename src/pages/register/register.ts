@@ -31,7 +31,7 @@ export class RegisterPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad RegisterPage');
+    //console.log('ionViewDidLoad RegisterPage');
   }
 
   createForm():void {

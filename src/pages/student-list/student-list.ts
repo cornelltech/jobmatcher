@@ -38,7 +38,7 @@ export class StudentListPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad StudentListPage');
+    //console.log('ionViewDidLoad StudentListPage');
     this.students$ = this.usersProvider.fetchStudents$();
     this.list$ = this.usersProvider.list$;
   }
@@ -49,15 +49,15 @@ export class StudentListPage {
   }
 
   goToDetail(evt:any, student:Student):void {
-    console.log('clicked student detail')
-    console.log(evt)
+    //console.log('clicked student detail')
+    //console.log(evt)
     this.navCtrl.push('student-detail-page', { id: student.uid })
   }
 
   openModal():void {
     const modal = this.modalCtrl.create(CreateUserModal, {target: 'student'});
     modal.onDidDismiss(data => {
-      console.log(data);
+      //console.log(data);
     });
     modal.present();
   }

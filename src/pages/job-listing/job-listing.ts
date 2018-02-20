@@ -41,18 +41,18 @@ export class JobListingPage {
   constructor(public db: AngularFireDatabase, public navCtrl: NavController,
     public navParams: NavParams, public modalCtrl: ModalController,
     private jobsProvider: JobsProvider, private usersProvider: UsersProvider) {
-      console.log('faves?', this.navParams.data.faves)
+      //console.log('faves?', this.navParams.data.faves)
       this.faves = this.navParams.data.faves;
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad JobListingPage');
+    //console.log('ionViewDidLoad JobListingPage');
     if(this.faves) {
-      console.log('call fave page');
+      //console.log('call fave page');
       this.jobs$ = this.jobsProvider.fetchMyFavoriteJobs$();
       // this.jobs$.subscribe(() => {});
     } else {
-      console.log('not fave page');
+      //console.log('not fave page');
       this.jobs$ = this.jobsProvider.fetchJobs$();
     }
   }
@@ -63,14 +63,14 @@ export class JobListingPage {
   }
 
   goToDetail(evt:any, job:Job):void {
-    console.log('clicked job detail')
-    console.log(evt)
+    //console.log('clicked job detail')
+    //console.log(evt)
     this.navCtrl.push('job-detail-page', { id: job.id })
   }
 
   goToCompany(evt:any, company:Company):void {
-    console.log('clicked company')
-    console.log(evt)
+    //console.log('clicked company')
+    //console.log(evt)
     evt.stopPropagation();
     this.navCtrl.push('company-detail-page', { id: company.id })
   }
@@ -81,7 +81,7 @@ export class JobListingPage {
   }
 
   reorderJobs(indexes) {
-    console.log(indexes);
+    //console.log(indexes);
     this.usersProvider.fetchMyFavoriteJobs$()
       .take(1)
       .mergeMap((jobs) => this.usersProvider.fetchMe$().take(1),

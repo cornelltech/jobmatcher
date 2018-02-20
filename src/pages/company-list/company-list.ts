@@ -37,7 +37,7 @@ export class CompanyListPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad CompanyListPage');
+    //console.log('ionViewDidLoad CompanyListPage');
     this.companies$ = this.companiesProvider.fetchCompanies$();
   }
 
@@ -53,7 +53,7 @@ export class CompanyListPage {
   openModal():void {
     const modal = this.modalCtrl.create(CreateUserModal, {target: 'recruiter'});
     modal.onDidDismiss(data => {
-      console.log(data);
+      //console.log(data);
     });
     modal.present();
   }

@@ -68,7 +68,7 @@ export class AuthProvider {
         this.afAuth.auth
             .signInWithEmailAndPassword(email, password)
             .catch((err) => {
-                console.log(err);
+                //console.log(err);
                 this.toastCtrl
                     .create({
                         message: `Sorry, we can't log you in with these credentials`,

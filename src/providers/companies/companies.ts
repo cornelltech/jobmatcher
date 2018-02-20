@@ -43,7 +43,7 @@ export class CompaniesProvider {
   ]
 
   constructor() {
-    console.log('Hello CompaniesProvider Provider');
+    //console.log('Hello CompaniesProvider Provider');
   }
 
   fetchCompanies$():Observable<Company[]> {

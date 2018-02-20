@@ -28,7 +28,7 @@ export class CreateUserModal {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad CreateUserModal');
+    //console.log('ionViewDidLoad CreateUserModal');
   }
 
   closeModal():void {

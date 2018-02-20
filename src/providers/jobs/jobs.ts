@@ -23,7 +23,7 @@ export class JobsProvider {
   jobs$:Observable<Job[]>;
 
   constructor(private db: AngularFireDatabase, private usersProvider: UsersProvider) {
-    console.log('Hello JobsProvider Provider');
+    //console.log('Hello JobsProvider Provider');
     // TODO: actually do this lol
     this.jobs$ = db.list('jobs').snapshotChanges()
       .map((actions) => {
@@ -52,7 +52,7 @@ export class JobsProvider {
           ({jobs, ids})
         )
         .map(payload =>
-          {console.log('fave jobs', payload)
+          {//console.log('fave jobs', payload)
             return payload.jobs
             .filter((job) =>
               (payload.ids
@@ -61,13 +61,13 @@ export class JobsProvider {
   }
 
   createJobListing(job:Job) {
-    console.log('job=', job);
+    //console.log('job=', job);
     try {
       const itemRef = this.db.list('jobs');
       itemRef.push(job);
-      console.log('u did it');
+      //console.log('u did it');
     } catch(error) {
-      console.log(error);
+      //console.log(error);
     }
   }
 
