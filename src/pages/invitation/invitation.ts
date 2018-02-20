@@ -58,7 +58,7 @@ export class InvitationPage {
       });
   }
 
-  ionViewDidLeave():void {
+  ionViewWillUnload():void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
@@ -93,7 +93,7 @@ export class InvitationPage {
           )
           .takeUntil(this.ngUnsubscribe)
           .subscribe(() => {
-            this.navCtrl.setRoot('tabs-page');
+            this.navCtrl.setRoot('company-select-page');
           });
       });
   }

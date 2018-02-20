@@ -10,6 +10,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 
 import { SettingsModal } from '../../modals/settings-modal/settings-modal';
 
+import { CompaniesProvider } from '../../providers/companies/companies';
 import { JobsProvider } from '../../providers/jobs/jobs';
 import { UsersProvider } from '../../providers/users/users';
 
@@ -36,43 +37,50 @@ export class JobListingPage {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   jobs$: Observable<Job[]>;
+  companies$: Observable<Company[]>;
   faves:boolean;
 
   constructor(public db: AngularFireDatabase, public navCtrl: NavController,
     public navParams: NavParams, public modalCtrl: ModalController,
+    private companiesProvider: CompaniesProvider,
     private jobsProvider: JobsProvider, private usersProvider: UsersProvider) {
-      console.log('faves?', this.navParams.data.faves)
       this.faves = this.navParams.data.faves;
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad JobListingPage');
-    if(this.faves) {
-      console.log('call fave page');
-      this.jobs$ = this.jobsProvider.fetchMyFavoriteJobs$();
-      // this.jobs$.subscribe(() => {});
-    } else {
-      console.log('not fave page');
-      this.jobs$ = this.jobsProvider.fetchJobs$();
-    }
+    this.usersProvider
+      .fetchMyPermissions$()
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe((payload) => {
+        if(this.faves) {
+          this.jobs$ = this.jobsProvider.fetchMyFavoriteJobs$();
+        }
+        else if(payload.userType === 'recruiter'){
+          this.jobs$ = this.jobsProvider.fetchJobsForCompany$(payload.affiliation)
+        }else{
+          this.jobs$ = this.jobsProvider.fetchJobs$()
+        }
+      });
+
+    this.companies$ = this.companiesProvider.fetchCompanies$();
   }
 
-  ionViewDidLeave():void {
+  ionViewWillUnload():void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
 
   goToDetail(evt:any, job:Job):void {
-    console.log('clicked job detail')
-    console.log(evt)
+    //console.log('clicked job detail')
+    //console.log(evt)
     this.navCtrl.push('job-detail-page', { id: job.id })
   }
 
-  goToCompany(evt:any, company:Company):void {
-    console.log('clicked company')
-    console.log(evt)
+  goToCompany(evt:any, company:string):void {
+    //console.log('clicked company')
+    //console.log(evt)
     evt.stopPropagation();
-    this.navCtrl.push('company-detail-page', { id: company.id })
+    this.navCtrl.push('company-detail-page', { id: company })
   }
 
   openSettingsModal() {
@@ -81,7 +89,7 @@ export class JobListingPage {
   }
 
   reorderJobs(indexes) {
-    console.log(indexes);
+    //console.log(indexes);
     this.usersProvider.fetchMyFavoriteJobs$()
       .take(1)
       .mergeMap((jobs) => this.usersProvider.fetchMe$().take(1),
@@ -101,5 +109,4 @@ export class JobListingPage {
         payload.jobs.forEach((job) => itemRef.push(job));
       });
   }
-
 }

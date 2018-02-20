@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
-
+import { IonicPage, NavController, NavParams, ToastController, ModalController, Toast } from 'ionic-angular';
+import { Subject } from 'rxjs/Subject';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 
 import { Job } from '../../models/job';
@@ -27,19 +27,26 @@ import { UsersProvider } from '../../providers/users/users';
   templateUrl: 'add-listing.html',
 })
 export class AddListingPage {
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
   form:FormGroup;
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     private fb:FormBuilder,
     public modalCtrl: ModalController,
+    public toastCtrl: ToastController,
     private usersProvider:UsersProvider,
     private jobsProvider:JobsProvider) {
       this.createForm();
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad AddListingPage');
+    //console.log('ionViewDidLoad AddListingPage');
+  }
+
+  ionViewWillUnload():void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
   openSettingsModal() {
@@ -58,18 +65,25 @@ export class AddListingPage {
   }
 
   onFormSubmit():void {
-    // TODO: this is broken (the form) + also none of your users have companies rn
-    console.log('hello!!!');
-    this.usersProvider.fetchMyPermissions$().subscribe((permissions) => {
-      console.log('WHATS UP');
-      // const jobData = {companyId: permissions.affiliation.id, formValue: this.form.value};
-      console.log('form=', this.form.value);
-      const job:Job = Object.assign({}, this.form.value, {
-        company: permissions.affiliation
-      });
-      this.jobsProvider.createJobListing(job);
-      this.form.reset();
-    })
+    this.usersProvider
+      .fetchMyPermissions$()
+      .take(1)
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe((permissions) => {
+        const job:Job = Object.assign({}, this.form.value, {
+          company: permissions.affiliation
+        });
+        this.jobsProvider.createJobListing(job);
+        this.form.reset();
+
+        this.toastCtrl
+          .create({
+              message: `Listing Succesfully Added!`,
+              duration: 3000,
+              position: 'bottom'
+          })
+          .present();
+    });
   }
 
 }

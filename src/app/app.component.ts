@@ -26,17 +26,14 @@ export class MyApp {
     userProvider: UsersProvider, ) {
 
       platform.ready().then(() => {
-        // Okay, so the platform is ready and our plugins are available.
-        // Here you can do any higher level native things you might need.
-        // statusBar.styleDefault();
-        // splashScreen.hide();
 
         const path = location.path();
         const routeToInvitation = path.includes('invitation');
+        const routeToAffiliation = path.includes('affiliation');
 
         auth.hasValidSession$
           .subscribe((payload:boolean) => {
-            if(routeToInvitation) {
+            if(routeToInvitation || routeToAffiliation) {
               // pass - let the DeepLinks do what they do
             }else if(payload) {
               // has valid session

@@ -8,6 +8,7 @@ export interface User{
   email: string;
   permission: Permission;
   jobs: any;
+  description?:string;
 }
 
 export interface Student extends User {

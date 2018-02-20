@@ -45,14 +45,6 @@ export class UsersProvider {
     return this.users$
       .map((users) => users
         .find((user) => user.uid === uid));
-    // return this.db
-    //   .list('/users',
-    //       ref => ref.orderByChild('uid').equalTo(uid)
-    //   )
-    //   .valueChanges()
-    //   .map((payload:User[]) =>
-    //     payload.length > 0 ? payload[0] : null
-    //   );
   }
 
   lookupById$(key:string):Observable<User> {
@@ -127,8 +119,7 @@ export class UsersProvider {
     return this.fetchMe$()
       .filter((payload) =>
         payload && payload !== undefined)
-      .map((payload) =>
-        payload.permission);
+      .map((payload) => payload.permission);
   }
 
   fetchMyFavoriteJobs$():Observable<any[]> {
@@ -138,7 +129,7 @@ export class UsersProvider {
       })
       .switchMap((userKey) => {
         const itemRef = this.db.list(`users/${userKey}/jobs`);
-        itemRef.valueChanges().subscribe((payload) => console.log(payload));
+        itemRef.valueChanges().subscribe((payload) => /**console.log(payload)**/{});
         return itemRef.valueChanges();
     })
   }
@@ -152,9 +143,9 @@ export class UsersProvider {
       itemRef.valueChanges().take(1).subscribe((payload) => {
         if(payload.indexOf(id) === -1) {
           itemRef.push(id);
-          console.log("adding job", id)
+          //console.log("adding job", id)
         } else {
-          console.log("job already exists in list, not adding")
+          //console.log("job already exists in list, not adding")
         }
       })
     }))
@@ -167,13 +158,13 @@ export class UsersProvider {
       const itemRef = this.db.list(`users/${userKey}/jobs`);
       itemRef.valueChanges().take(1).subscribe((payload) => {
         if(payload.indexOf(id) === -1) {
-          console.log("job doesn't exist to unfavorite (how did you get here)", id)
+          //console.log("job doesn't exist to unfavorite (how did you get here)", id)
         } else {
-          console.log("deleting job", id)
+          //console.log("deleting job", id)
           this.fetchMe$().take(1).subscribe((payload) => {
             Object.keys(payload.jobs).forEach((key) => {
               if (payload.jobs[key] === id) {
-                console.log("deleting job", id, "from faves list, key", key);
+                //console.log("deleting job", id, "from faves list, key", key);
                 itemRef.remove(key);
               }
             })
@@ -191,9 +182,29 @@ export class UsersProvider {
       })
       .switchMap((userKey) => {
         const itemRef = this.db.list(`users/${userKey}/jobs`);
-        itemRef.valueChanges().take(1).subscribe((payload) => console.log(payload));
+        itemRef.valueChanges().take(1).subscribe((payload) => /**console.log(payload)*/{});
         return itemRef.valueChanges().map((payload) => payload.indexOf(id) !== -1);
       })
+  }
+
+  affiliate(orgId:string):void {
+    const uid:string = this.afAuth.auth.currentUser ?
+      this.afAuth.auth.currentUser.uid : '';
+
+    this.fetchUserKey$(uid).take(1).subscribe((userKey => {
+      const itemRef = this.db.object(`users/${userKey}/permission/affiliation`);
+      itemRef.set(orgId);
+    }));
+  }
+
+  update(id:string, obj:User):void {
+    try {
+      const itemRef = this.db.object(`users/${id}`);
+      delete obj.id; // cause firebase
+      itemRef.update(obj);
+    } catch (error) {
+      console.log(error)
+    }
   }
 
 }

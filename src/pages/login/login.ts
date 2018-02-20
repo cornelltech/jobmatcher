@@ -31,7 +31,7 @@ export class LoginPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad LoginPage');
+    //console.log('ionViewDidLoad LoginPage');
   }
 
   createForm():void {
@@ -42,7 +42,7 @@ export class LoginPage {
   }
 
   onFormSubmit():void {
-    console.log('login')
+    //console.log('login')
     const formModel = this.form.value;
     this.auth.login(formModel.email, formModel.password);
   }

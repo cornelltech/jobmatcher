@@ -20,7 +20,6 @@
 
 
 <ion-content padding>
-  {{ form.value | json }}
   <form [formGroup]="form" (ngSubmit)="onFormSubmit()">
     <ion-item>
       <ion-label for="title">Title</ion-label>

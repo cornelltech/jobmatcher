@@ -1,7 +1,7 @@
 export interface Company{
-  id:string;
+  id?: string;
   name: string;
-  description: string;
+  description?: string;
   link?: string;
-  logo: string | null;
+  logo?: string | null;
 }

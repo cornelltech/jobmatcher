@@ -2,7 +2,10 @@ import 'rxjs/add/operator/filter';
 import 'rxjs/add/observable/combineLatest';
 
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+
+import { Subject } from 'rxjs/Subject';
 
 import { SettingsModal } from '../../modals/settings-modal/settings-modal';
 
@@ -27,20 +30,34 @@ import { Observable } from 'rxjs/Observable';
   templateUrl: 'student-detail.html',
 })
 export class StudentDetailPage {
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
   student$:Observable<Student>;
   isOwner$:Observable<boolean>;
+  isEditing:boolean;
+  form:FormGroup;
+
+  PROGRAMS = [
+    'CS', 'CM', 'HT', 'LLM', 'MBA', 'ORIE', 'ECE', 'DESIGN'
+  ]
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     public modalCtrl: ModalController,
-    private usersProvider: UsersProvider) {
+    private usersProvider: UsersProvider,
+    private fb: FormBuilder) {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad StudentDetailPage');
+     ('ionViewDidLoad StudentDetailPage');
 
     this.student$ = this.usersProvider
       .fetchStudent$(this.navParams.data.id);
+
+    this.student$
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe((payload) => {
+        this.createForm(payload);
+      });
 
     this.isOwner$ = Observable
       .combineLatest(
@@ -51,8 +68,37 @@ export class StudentDetailPage {
       )
       .filter((payload) => payload.me && payload.me !== undefined)
       .map((payload) =>
-      payload.currentPageStudent.uid === payload.me.uid)
+        payload.me.permission.userType == 'student' && payload.currentPageStudent.uid === payload.me.uid)
 
+  }
+
+  ionViewWillUnload():void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
+
+
+  createForm(obj:Student):void {
+    this.form = this.fb.group({
+        name: new FormControl(obj?obj.name:'', [Validators.required]),
+        email: new FormControl(obj?obj.email:'', []),
+        description: new FormControl(obj?obj.description:'', []),
+        year: new FormControl(obj?obj.year:'', []),
+        program: new FormControl(obj?obj.program:'', []),
+        resumeLink: new FormControl(obj?obj.resumeLink:'', []),
+    });
+  }
+
+  onFormSubmit():void {
+    this.student$
+      .take(1)
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe((payload) => {
+        const formModel = this.form.value;
+        this.usersProvider.update(payload.id, formModel);
+        this.form.reset();
+        this.isEditing = false;
+      });
   }
 
   openSettingsModal() {

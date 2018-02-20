@@ -28,7 +28,7 @@ export class CreateUserModal {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad CreateUserModal');
+    //console.log('ionViewDidLoad CreateUserModal');
   }
 
   closeModal():void {
@@ -76,7 +76,7 @@ export class CreateUserModal {
   presentToast() {
     let toast = this.toastCtrl.create({
       message: 'Invitations Sent!',
-      duration: 3000
+      duration: 5000
     });
     toast.present();
   }

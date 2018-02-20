@@ -59,7 +59,7 @@ export class TabsPage {
 
   ionViewDidLoad() { }
 
-  ionViewDidLeave():void {
+  ionViewWillUnload():void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
@@ -103,7 +103,7 @@ export class TabsPage {
           title: 'Profile',
           icon: 'briefcase',
           view: CompanyDetailPage,
-          params: {id: 'ct'}
+          params: {id: permissions.affiliation}
         }
       ];
 
