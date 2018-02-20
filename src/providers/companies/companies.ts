@@ -45,7 +45,7 @@ export class CompaniesProvider {
       objs.find((obj) => obj.name === name));
   }
 
-  create(tname:string) {
+  create(name:string) {
     const itemRef = this.db.list('companies');
     const payload:Company = {
         name,

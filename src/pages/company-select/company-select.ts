@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
-import { CreateCompanyModal } from '../../modals/create-company-modal/create-company-modal';
 import { CompaniesProvider } from '../../providers/companies/companies';
 
 import { Company } from '../../models/company'
@@ -28,13 +28,16 @@ export class CompanySelectPage {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   q:string;
+  form:FormGroup;
   companies$:Observable<Company[]>;
 
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
     public modalCtrl: ModalController,
-    private companiesProvider:CompaniesProvider) {
+    private companiesProvider:CompaniesProvider,
+    private fb: FormBuilder) {
+      this.createForm();
   }
 
   ionViewDidLoad() {
@@ -50,12 +53,19 @@ export class CompanySelectPage {
     console.log(this.q)
   }
 
-  openModal():void {
-    const modal = this.modalCtrl.create(CreateCompanyModal, {target: 'recruiter'});
-    modal.onDidDismiss(data => {
-      //console.log(data);
-    });
-    modal.present();
+  createForm():void {
+    this.form = this.fb.group({
+        name: new FormControl('', [Validators.required]),
+    })
+  }
+
+  onFormSubmit():void {
+    const formModel = this.form.value;
+    console.log(formModel)
+    this.companiesProvider.create(
+      formModel.name,
+    );
+    this.createForm();
   }
 
 }

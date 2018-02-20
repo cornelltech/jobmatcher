@@ -10,10 +10,11 @@
     <ion-title>Select your company</ion-title>
   </ion-navbar>
 
-  <ion-searchbar
+  <!-- TODO - Maybe add this -->
+  <!-- <ion-searchbar
     [(ngModel)]="q"
     (ionInput)="onInput($event)">
-  </ion-searchbar>
+  </ion-searchbar> -->
 
 </ion-header>
 
@@ -21,10 +22,23 @@
   <ion-grid no-padding>
     <ion-row>
       <ion-col offset-md-2 col-md-8>
+          <ion-list>
+            <ion-list-header>
+                Create Organization
+            </ion-list-header>
+          </ion-list>
+          <form [formGroup]="form" (ngSubmit)="onFormSubmit()" novalidate>
+              <ion-item>
+                <ion-label stacked>Name</ion-label>
+                <ion-input type="text" formControlName="name"></ion-input>
+              </ion-item>
+              <button ion-button full type="submit" [disabled]="!form.valid"> Create </button>
+          </form>
+
         <ion-list>
-          <button ion-item text-center (click)="openModal()">
-            Create Company
-          </button>
+          <ion-list-header>
+            Select Organization
+          </ion-list-header>
           <button ion-item
             *ngFor="let item of companies$ | async">
             <ion-avatar item-start>

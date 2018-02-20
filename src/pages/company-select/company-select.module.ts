@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
+import { ReactiveFormsModule } from '@angular/forms';
 import { CompanySelectPage } from './company-select';
-import { CreateCompanyModalModule } from '../../modals/create-company-modal/create-company-modal.module';
 
 @NgModule({
   declarations: [
     CompanySelectPage,
   ],
   imports: [
-    CreateCompanyModalModule,
+    ReactiveFormsModule,
     IonicPageModule.forChild(CompanySelectPage),
   ],
 })
