@@ -59,7 +59,7 @@ export class CompanyDetailPage {
             ({company, permissions})
       )
       .map((payload) =>
-        payload.company.id === payload.permissions.affiliation)
+        payload.permissions.userType == 'recruiter' && (payload.company.id === payload.permissions.affiliation))
   }
 
   createForm(obj:Company):void {

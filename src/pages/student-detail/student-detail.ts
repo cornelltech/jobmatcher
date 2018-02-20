@@ -68,7 +68,7 @@ export class StudentDetailPage {
       )
       .filter((payload) => payload.me && payload.me !== undefined)
       .map((payload) =>
-      payload.currentPageStudent.uid === payload.me.uid)
+        payload.me.permission.userType == 'student' && payload.currentPageStudent.uid === payload.me.uid)
 
   }
 
