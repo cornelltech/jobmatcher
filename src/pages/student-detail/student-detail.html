@@ -9,6 +9,9 @@
   <ion-navbar>
     <ion-title>{{ (student$ | async)?.name }}</ion-title>
     <ion-buttons end>
+      <button *ngIf="isOwner$|async" (click)="isEditing = true" ion-button icon-only>
+        <ion-icon name="create"></ion-icon>
+      </button>
       <button ion-button icon-only (click)="openSettingsModal()">
         <ion-icon name="settings"></ion-icon>
       </button>
@@ -24,23 +27,65 @@
     <ion-row>
       <ion-col offset-md-2 col-md-8>
 
-          <ion-card>
+          <ion-card *ngIf="!isEditing">
             <ion-item>
               <h2>{{ (student$ | async)?.name }}</h2>
+              <p>{{ (student$ | async)?.program }} {{ (student$ | async)?.year }}</p>
               <p>{{ (student$ | async)?.email }}</p>
             </ion-item>
-            <!-- <ion-card-content>
-              <p>Wait a minute. Wait a minute, Doc. Uhhh... Are you telling me that you built a time machine... out of a DeLorean?! Whoa. This is heavy.</p>
-            </ion-card-content> -->
+            <ion-card-content>
+              <p>{{ (student$ | async)?.description }}</p>
+            </ion-card-content>
             <ion-row>
               <ion-col>
-                <button ion-button icon-left clear small>
+                <a ion-button icon-left clear small href="{{ (student$ | async)?.resumeLink }}" target="_blank">
                   <ion-icon name="document"></ion-icon>
-                  <a href="{{ (student$ | async)?.resumeLink }}" target="_blank">Resume</a>
-                </button>
+                  Resume
+                </a>
               </ion-col>
             </ion-row>
           </ion-card>
+
+          <form *ngIf="isEditing" [formGroup]="form" (ngSubmit)="onFormSubmit()" novalidate>
+              <ion-item>
+                <ion-label stacked>Name</ion-label>
+                <ion-input type="text" formControlName="name"></ion-input>
+              </ion-item>
+
+              <ion-item>
+                <ion-label stacked>Resume Link</ion-label>
+                <ion-input type="text" formControlName="resumeLink"></ion-input>
+              </ion-item>
+
+              <ion-item>
+                <ion-label stacked>Email</ion-label>
+                <ion-input type="text" readonly="true" formControlName="email"></ion-input>
+              </ion-item>
+              
+              <ion-item>
+                <ion-label stacked>Year</ion-label>
+                <ion-input type="number" formControlName="year"></ion-input>
+              </ion-item>
+
+              <ion-item>
+                <ion-label stacked>Program</ion-label>
+                <ion-select formControlName="program">
+                  <ion-option 
+                    *ngFor="let item of PROGRAMS"
+                    [value]="item">
+                      {{item}}
+                    </ion-option>
+                </ion-select>
+              </ion-item>
+
+              <ion-item>
+                <ion-label stacked>Description</ion-label>
+                <ion-input type="text" formControlName="description"></ion-input>
+              </ion-item>
+
+              <button ion-button full type="submit" [disabled]="!form.valid">Update</button>
+
+          </form>
       </ion-col>
     </ion-row>
   </ion-grid>

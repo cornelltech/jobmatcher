@@ -49,7 +49,7 @@ export class CompanyDetailPage {
       .takeUntil(this.ngUnsubscribe)
       .subscribe((payload) => {
         this.createForm(payload);
-      })
+      });
 
     this.isOwner$ = Observable
       .combineLatest(

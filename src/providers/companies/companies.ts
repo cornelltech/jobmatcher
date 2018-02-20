@@ -61,7 +61,6 @@ export class CompaniesProvider {
     } catch (error) {
       console.log(error)
     }
-    
   }
 
 }

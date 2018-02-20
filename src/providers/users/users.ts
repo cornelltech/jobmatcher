@@ -197,4 +197,14 @@ export class UsersProvider {
     }));
   }
 
+  update(id:string, obj:User):void {
+    try {
+      const itemRef = this.db.object(`users/${id}`);
+      delete obj.id; // cause firebase
+      itemRef.update(obj);
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
 }
