@@ -39,6 +39,13 @@ export class JobsProvider {
     return this.jobs$;
   }
 
+  fetchJobsForCompany$(companyId:string):Observable<Job[]> {
+    return this.fetchJobs$()
+      .map((payload) => payload
+        .filter((obj) => obj.company === companyId)
+      );
+  }
+
   fetchJob$(key:string):Observable<Job> {
     return this.jobs$.map((jobs) =>
       jobs.find((job) => job.id === key));

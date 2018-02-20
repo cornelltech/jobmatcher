@@ -41,19 +41,24 @@ export class JobListingPage {
   constructor(public db: AngularFireDatabase, public navCtrl: NavController,
     public navParams: NavParams, public modalCtrl: ModalController,
     private jobsProvider: JobsProvider, private usersProvider: UsersProvider) {
-      //console.log('faves?', this.navParams.data.faves)
       this.faves = this.navParams.data.faves;
   }
 
   ionViewDidLoad() {
-    //console.log('ionViewDidLoad JobListingPage');
     if(this.faves) {
-      //console.log('call fave page');
       this.jobs$ = this.jobsProvider.fetchMyFavoriteJobs$();
-      // this.jobs$.subscribe(() => {});
     } else {
-      //console.log('not fave page');
-      this.jobs$ = this.jobsProvider.fetchJobs$();
+      this.usersProvider
+        .fetchMyPermissions$()
+        .takeUntil(this.ngUnsubscribe)
+        .subscribe((payload) => {
+          if(payload.userType === 'recruiter'){
+            this.jobs$ = this.jobsProvider.fetchJobsForCompany$(payload.affiliation)
+          }else{
+            this.jobs$ = this.jobsProvider.fetchJobs$()
+          }
+        })
+      
     }
   }
 

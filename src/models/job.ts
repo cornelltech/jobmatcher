@@ -7,7 +7,7 @@ export interface Job {
   title: string;
   description: string;
   location: string;
-  company: Company;
+  company: string;
   requirements: Requirement;
   session: Session;
 }
