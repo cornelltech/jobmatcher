@@ -52,7 +52,7 @@ export class CompanyDetailPage {
         payload.company.id === payload.permissions.affiliation.id)
   }
 
-  ionViewDidLeave():void {
+  ionViewWillUnload():void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }

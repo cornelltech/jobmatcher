@@ -43,7 +43,7 @@ export class StudentListPage {
     this.list$ = this.usersProvider.list$;
   }
 
-  ionViewDidLeave():void {
+  ionViewWillUnload():void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }

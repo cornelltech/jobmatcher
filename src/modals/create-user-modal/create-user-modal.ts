@@ -76,7 +76,7 @@ export class CreateUserModal {
   presentToast() {
     let toast = this.toastCtrl.create({
       message: 'Invitations Sent!',
-      duration: 3000
+      duration: 5000
     });
     toast.present();
   }

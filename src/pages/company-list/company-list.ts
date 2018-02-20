@@ -41,7 +41,7 @@ export class CompanyListPage {
     this.companies$ = this.companiesProvider.fetchCompanies$();
   }
 
-  ionViewDidLeave():void {
+  ionViewWillUnload():void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }

@@ -59,7 +59,7 @@ export class TabsPage {
 
   ionViewDidLoad() { }
 
-  ionViewDidLeave():void {
+  ionViewWillUnload():void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
