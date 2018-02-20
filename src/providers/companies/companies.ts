@@ -53,4 +53,15 @@ export class CompaniesProvider {
     itemRef.push(payload);
   }
 
+  update(id:string, obj:Company):void {
+    try {
+      const itemRef = this.db.object(`companies/${id}`);
+      delete obj.id; // cause firebase
+      itemRef.update(obj);
+    } catch (error) {
+      console.log(error)
+    }
+    
+  }
+
 }

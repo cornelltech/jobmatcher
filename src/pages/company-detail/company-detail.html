@@ -9,6 +9,9 @@
   <ion-navbar>
     <ion-title>{{ (company$ | async)?.name }}</ion-title>
     <ion-buttons end>
+      <button *ngIf="isOwner$|async" (click)="isEditing = true" ion-button icon-only>
+        <ion-icon name="create"></ion-icon>
+      </button>
       <button ion-button icon-only (click)="openSettingsModal()">
         <ion-icon name="settings"></ion-icon>
       </button>
@@ -19,7 +22,8 @@
 
 
 <ion-content padding>
-    <ion-card>
+
+    <ion-card *ngIf="!isEditing">
       <ion-item>
         <ion-avatar item-start>
           <img [src]="(company$ | async)?.logo || 'http://via.placeholder.com/50x50'">
@@ -27,7 +31,7 @@
         <h2>{{ (company$ | async)?.name }}</h2>
       </ion-item>
       <ion-card-content>
-        <p>{{ (company$ | async)?.text }}</p>
+        <p>{{ (company$ | async)?.description }}</p>
       </ion-card-content>
       <ion-row>
         <ion-col>
@@ -38,5 +42,27 @@
         </ion-col>
       </ion-row>
     </ion-card>
+
+    
+
+    <form *ngIf="isEditing" [formGroup]="form" (ngSubmit)="onFormSubmit()" novalidate>
+        <ion-item>
+          <ion-label stacked>Name</ion-label>
+          <ion-input type="text" formControlName="name"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label stacked>Logo Url</ion-label>
+          <ion-input type="text" formControlName="logo"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label stacked>Link</ion-label>
+          <ion-input type="text" formControlName="link"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label stacked>Description</ion-label>
+          <ion-input type="text" formControlName="description"></ion-input>
+        </ion-item>
+        <button ion-button full type="submit" [disabled]="!form.valid">Update</button>
+    </form>
 
 </ion-content>

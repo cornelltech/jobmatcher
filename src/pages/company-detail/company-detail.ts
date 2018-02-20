@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 
 import { SettingsModal } from '../../modals/settings-modal/settings-modal';
@@ -32,14 +33,23 @@ export class CompanyDetailPage {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
   company$:Observable<Company>;
   isOwner$:Observable<boolean>;
+  isEditing:boolean;
+  form:FormGroup;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController,
-             private usersProvider: UsersProvider, private companiesProvider: CompaniesProvider) {
+             private usersProvider: UsersProvider, private companiesProvider: CompaniesProvider,
+             private fb: FormBuilder) {
   }
 
   ionViewDidLoad() {
     this.company$ = this.companiesProvider
       .fetchCompany$(this.navParams.data.id);
+
+    this.company$
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe((payload) => {
+        this.createForm(payload);
+      })
 
     this.isOwner$ = Observable
       .combineLatest(
@@ -50,6 +60,27 @@ export class CompanyDetailPage {
       )
       .map((payload) =>
         payload.company.id === payload.permissions.affiliation)
+  }
+
+  createForm(obj:Company):void {
+    this.form = this.fb.group({
+        name: new FormControl(obj?obj.name:'', [Validators.required]),
+        logo: new FormControl(obj?obj.logo:'', []),
+        link: new FormControl(obj?obj.link:'', []),
+        description: new FormControl(obj?obj.description:'', []),
+    });
+  }
+
+  onFormSubmit():void {
+    this.company$
+      .take(1)
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe((payload) => {
+        const formModel = this.form.value;
+        this.companiesProvider.update(payload.id, formModel);
+        this.form.reset();
+        this.isEditing = false;
+      });
   }
 
   ionViewWillUnload():void {
