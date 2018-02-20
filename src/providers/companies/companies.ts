@@ -1,7 +1,13 @@
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/observable/from';
+
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
+
+import { AngularFireDatabase } from 'angularfire2/database';
 
 import { Company } from '../../models/company';
 /*
@@ -12,48 +18,40 @@ import { Company } from '../../models/company';
 */
 @Injectable()
 export class CompaniesProvider {
-  companies: Company[] = [
-    {
-      id:'alsdfsd',
-      name: 'google',
-      description: `For applications of DFS in relation to specific domains,
-      such as searching for solutions in artificial intelligence or web-crawling,
-      the graph to be traversed is often either too large to visit in its entirety
-      or infinite (DFS may suffer from non-termination). In such cases, search is
-      only performed to a limited depth; due to limited resources, such as memory
-      or disk space, one typically does not use data structures to keep track of
-      the set of all previously visited vertices.`,
-      link: 'www.google.com',
-      logo: null
-    },
-    {
-      id:'alddddsdfsd',
-      name: 'amazon',
-      description: 'makes $$ searches',
-      link: 'www.amazon.com',
-      logo: null
-    },
-    {
-      id: 'ct',
-      name: 'cornell tech',
-      description: 'we live here',
-      link: 'www.cornell.edu',
-      logo: null
-    }
-  ]
+  companies$:Observable<Company[]>;
 
-  constructor() {
-    //console.log('Hello CompaniesProvider Provider');
+  constructor(private db: AngularFireDatabase,) {
+    this.companies$ = db.list('companies').snapshotChanges()
+      .map((actions) => {
+        return actions.map(a => {
+          const data = a.payload.val() as Company;
+          data.id = a.payload.key;
+          return data;
+        })
+      });
   }
 
   fetchCompanies$():Observable<Company[]> {
-    return of(this.companies);
+    return this.companies$;
   }
 
   fetchCompany$(key:string):Observable<Company> {
-    const item:Company = this.companies
-      .find((obj) => obj.id === key);
-    return of(item);
+    return this.companies$.map((objs) =>
+      objs.find((obj) => obj.id === key));
+  }
+
+  lookupCompany$(name:string):Observable<Company> {
+    return this.companies$.map((objs) =>
+      objs.find((obj) => obj.name === name));
+  }
+
+  create(tname:string) {
+    const itemRef = this.db.list('companies');
+    const payload:Company = {
+        name,
+    };
+
+    itemRef.push(payload);
   }
 
 }

@@ -1,0 +1,35 @@
+
+<!--
+  Generated template for the CreateUserModal page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<form [formGroup]="form" (ngSubmit)="onFormSubmit()" novalidate>
+    <ion-header>
+        <ion-navbar>
+            <ion-title>Create Company</ion-title>
+            <ion-buttons end>
+                <button type="button" ion-button icon-only (click)="closeModal()">
+                    <ion-icon name="close"></ion-icon>
+                </button>
+            </ion-buttons>
+        </ion-navbar>
+    </ion-header>
+    
+    <ion-content padding>
+        <ion-grid>
+            
+        </ion-grid>
+    
+    </ion-content>
+    
+    <ion-footer>
+        <ion-toolbar>
+        <ion-buttons end>
+            <button ion-button full type="submit" [disabled]="!form.valid"> Create </button>
+        </ion-buttons>
+        </ion-toolbar>
+    </ion-footer>
+    
+</form>

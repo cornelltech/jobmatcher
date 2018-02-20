@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
+import { CreateCompanyModal } from '../../modals/create-company-modal/create-company-modal';
 import { CompaniesProvider } from '../../providers/companies/companies';
 
 import { Company } from '../../models/company'
@@ -32,6 +33,7 @@ export class CompanySelectPage {
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
+    public modalCtrl: ModalController,
     private companiesProvider:CompaniesProvider) {
   }
 
@@ -46,6 +48,14 @@ export class CompanySelectPage {
 
   onInput(evt:any){
     console.log(this.q)
+  }
+
+  openModal():void {
+    const modal = this.modalCtrl.create(CreateCompanyModal, {target: 'recruiter'});
+    modal.onDidDismiss(data => {
+      //console.log(data);
+    });
+    modal.present();
   }
 
 }
