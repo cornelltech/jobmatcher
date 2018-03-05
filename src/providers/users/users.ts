@@ -1,4 +1,5 @@
 import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/skip';
 import 'rxjs/add/operator/take';
@@ -91,7 +92,10 @@ export class UsersProvider {
   fetchInterestedStudents$(jobId:string):Observable<Student[]> {
     return this.fetchStudents$()
       .map((students) => students
-        .filter((student) => this.isFavoritedJob$(jobId, student.uid)));
+        .filter((student) =>
+          (Object as any).values(student.jobs).indexOf(jobId) > -1
+        )
+      )
   }
 
 
@@ -151,9 +155,8 @@ export class UsersProvider {
     }))
   }
 
-  unfavoriteJob(id:string):void {
-    const uid:string = this.afAuth.auth.currentUser ?
-      this.afAuth.auth.currentUser.uid : '';
+  unfavoriteJob(id:string, userUid:string=null):void {
+    const uid:string = userUid ? userUid : this.afAuth.auth.currentUser.uid;
     this.fetchUserKey$(uid).take(1).subscribe((userKey => {
       const itemRef = this.db.list(`users/${userKey}/jobs`);
       itemRef.valueChanges().take(1).subscribe((payload) => {
@@ -161,7 +164,7 @@ export class UsersProvider {
           //console.log("job doesn't exist to unfavorite (how did you get here)", id)
         } else {
           //console.log("deleting job", id)
-          this.fetchMe$().take(1).subscribe((payload) => {
+          this.lookup$(uid).take(1).subscribe((payload) => {
             Object.keys(payload.jobs).forEach((key) => {
               if (payload.jobs[key] === id) {
                 //console.log("deleting job", id, "from faves list, key", key);
