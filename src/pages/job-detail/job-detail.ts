@@ -166,6 +166,10 @@ export class JobDetailPage {
       }));
   }
 
+  removeStudentFromJob(student:Student) {
+    this.usersProvider.unfavoriteJob(this.navParams.data.id, student.uid);
+  }
+
   get requirementsSectionArrow():string {
     return this.isRequirementsSectionCollapsed ?
       'arrow-back' : 'arrow-down';
