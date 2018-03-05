@@ -10,6 +10,8 @@ import { of } from 'rxjs/observable/of';
 import { AngularFireDatabase } from 'angularfire2/database';
 
 import { Job } from '../../models/job';
+import { User } from '../../models/user';
+
 import { UsersProvider } from '../../providers/users/users';
 
 /*
@@ -36,7 +38,20 @@ export class JobsProvider {
   }
 
   fetchJobs$():Observable<Job[]> {
-    return this.jobs$;
+    return Observable.combineLatest(
+      this.jobs$,
+      this.usersProvider.fetchMe$(),
+      (jobs:Job[], me:User) => ({jobs, me})
+    )
+    .map((payload) => payload.jobs
+      .filter((job) => {
+        if(job.blacklist) {
+          return (Object as any).values(job.blacklist).indexOf(payload.me.uid) == -1;
+        } else {
+          return true; // this job has no blacklist
+        }
+      })
+    );
   }
 
   fetchJobsForCompany$(companyId:string):Observable<Job[]> {
@@ -74,6 +89,14 @@ export class JobsProvider {
     } catch(error) {
       console.log(error);
     }
+  }
+
+  addToBlacklist(jobId:string, studentUid:string) {
+    this.fetchJob$(jobId).take(1).subscribe((job) =>
+      {
+        const itemRef = this.db.list(`jobs/${jobId}/blacklist`);
+        itemRef.valueChanges().take(1).subscribe((payload) => itemRef.push(studentUid));
+      })
   }
 
 }

@@ -71,7 +71,6 @@
                   (click)="goToStudent($event, student)">
                   <h2>{{ student.name }}</h2>
                   <h3>{{ student.program }} &middot; {{ student.year }} </h3>
-                  {{student.uid}}
                 </button>
                 <button ion-button round clear icon-only item-end (click)="removeStudentFromJob(student)">
                   <ion-icon name="close"></ion-icon>
