@@ -133,7 +133,7 @@ export class UsersProvider {
       })
       .switchMap((userKey) => {
         const itemRef = this.db.list(`users/${userKey}/jobs`);
-        itemRef.valueChanges().subscribe((payload) => /**console.log(payload)**/{});
+        // itemRef.valueChanges().subscribe((payload) => /**console.log(payload)**/{});
         return itemRef.valueChanges();
     })
   }

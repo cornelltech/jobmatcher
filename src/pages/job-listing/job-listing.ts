@@ -71,14 +71,10 @@ export class JobListingPage {
   }
 
   goToDetail(evt:any, job:Job):void {
-    //console.log('clicked job detail')
-    //console.log(evt)
     this.navCtrl.push('job-detail-page', { id: job.id })
   }
 
   goToCompany(evt:any, company:string):void {
-    //console.log('clicked company')
-    //console.log(evt)
     evt.stopPropagation();
     this.navCtrl.push('company-detail-page', { id: company })
   }
@@ -89,7 +85,6 @@ export class JobListingPage {
   }
 
   reorderJobs(indexes) {
-    //console.log(indexes);
     this.usersProvider.fetchMyFavoriteJobs$()
       .take(1)
       .mergeMap((jobs) => this.usersProvider.fetchMe$().take(1),
@@ -97,16 +92,41 @@ export class JobListingPage {
       )
       .takeUntil(this.ngUnsubscribe)
       .subscribe((payload) => {
-        // reorder list from reorder event
-        let job = payload.jobs[indexes.from];
-        payload.jobs.splice(indexes.from, 1);
-        payload.jobs.splice(indexes.to, 0, job);
+        // get job being moved
+        const job = payload.jobs[indexes.from];
+        
+        // split around the insertion index
+        let left = [];
+        let right =[];
+        // remove the thing we are moving
+        if(indexes.from > indexes.to){
+          left = payload.jobs.slice(0,indexes.to);
+          right = payload.jobs.slice(indexes.to);
+          right = right.filter((obj)=>obj!==job);
+        }else{
+          left = payload.jobs.slice(0,indexes.to+1);
+          right = payload.jobs.slice(indexes.to+1);
+          left = left.filter((obj)=>obj!==job);
+        }
+
+        // [left] + obj + [right]
+        const reordered = [...left, job, ...right];
 
         // update database
         let userKey = payload.user.id;
+
         const itemRef = this.db.list(`users/${userKey}/jobs`);
-        itemRef.remove();
-        payload.jobs.forEach((job) => itemRef.push(job));
+        
+        itemRef.snapshotChanges()
+          .map((changes) => changes.map((obj) => obj.key))
+          .take(1)
+          .takeUntil(this.ngUnsubscribe)
+          .subscribe((keys) => {
+            keys.forEach((key, i) => {
+              itemRef.set(key, reordered[i])
+            });
+          });
+
       });
   }
 }

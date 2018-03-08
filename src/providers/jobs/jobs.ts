@@ -67,19 +67,18 @@ export class JobsProvider {
   }
 
   fetchMyFavoriteJobs$():Observable<Job[]> {
-    return Observable.combineLatest(
-      this.jobs$,
-      this.usersProvider.fetchMyFavoriteJobs$(),
-        (jobs:Job[], ids:string[]) =>
-          ({jobs, ids})
-        )
-        .map(payload =>
-          {//console.log('fave jobs', payload)
-            return payload.jobs
-            .filter((job) =>
-              (payload.ids
-                && payload.ids != undefined
-                && payload.ids.indexOf(job.id) > -1))});
+    return Observable
+      .combineLatest(
+        this.jobs$,
+        this.usersProvider.fetchMyFavoriteJobs$(),
+          (jobs:Job[], ids:string[]) =>
+            ({jobs, ids})
+          )
+          .map((payload) =>
+            payload.ids.map((key) =>
+              payload.jobs.find((obj) => obj.id == key)
+            )
+          )
   }
 
   createJobListing(job:Job) {
