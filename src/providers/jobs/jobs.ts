@@ -98,4 +98,33 @@ export class JobsProvider {
       })
   }
 
+  // default to student=self
+  addCurrentUserToInterestedStudentsList(jobId:string) {
+    this.usersProvider.fetchMe$().take(1).subscribe((me) => {
+      const itemRef = this.db.list(`jobs/${jobId}/students`);
+      itemRef.push(me.id);
+    })
+  }
+
+  // defaults to user = me
+  removeUserFromInterestedStudentsList(jobId:string, studentUid:string=null) {
+    let user = (studentUid === null) ? this.usersProvider.fetchMe$() : this.usersProvider.fetchStudent$(studentUid);
+    user.take(1).subscribe((student) => {
+      const itemRef = this.db.list(`jobs/${jobId}/students`);
+      itemRef.valueChanges().take(1).subscribe((payload) => {
+        if(payload.indexOf(student.id) === -1) {
+          // console.log('??? this student not in list')
+        } else {
+          this.fetchJob$(jobId).take(1).subscribe((payload) => {
+            Object.keys(payload.students).forEach((key) => {
+              if (payload.students[key] === student.id) {
+                itemRef.remove(key);
+              }
+            })
+          })
+        }
+      })
+    })
+  }
+
 }

@@ -7,6 +7,8 @@ import 'rxjs/add/observable/combineLatest';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 
+import { AngularFireDatabase } from 'angularfire2/database';
+
 import { Company } from '../../models/company';
 import { Job } from '../../models/job';
 import { Student } from '../../models/user';
@@ -56,7 +58,8 @@ export class JobDetailPage {
 
   favoritesIcon:string = "star-outline";
 
-  constructor(public navCtrl: NavController,
+  constructor(public db: AngularFireDatabase,
+    public navCtrl: NavController,
     public navParams: NavParams,
     public modalCtrl: ModalController,
     private jobsProvider: JobsProvider,
@@ -149,6 +152,7 @@ export class JobDetailPage {
   }
 
   addFavorite() {
+    console.log('hi hello what up')
     this.job$
       .take(1)
       .mergeMap((job) => this.usersProvider.isFavoritedJob$(job.id).take(1),
@@ -159,17 +163,61 @@ export class JobDetailPage {
         if(payload.isFave) {
           //console.log("unfavoriting job", payload.job.id);
           this.usersProvider.unfavoriteJob(payload.job.id);
+          this.jobsProvider.removeUserFromInterestedStudentsList(payload.job.id);
         } else {
-          //console.log("favoriting job", payload.job.id);
+          // console.log("favoriting job", payload.job.id);
           this.usersProvider.favoriteJob(payload.job.id);
+          this.jobsProvider.addCurrentUserToInterestedStudentsList(payload.job.id);
         }
       }));
   }
 
   removeStudentFromJob(student:Student) {
     this.usersProvider.unfavoriteJob(this.navParams.data.id, student.uid);
+    this.jobsProvider.removeUserFromInterestedStudentsList(this.navParams.data.id, student.uid)
     this.jobsProvider.addToBlacklist(this.navParams.data.id, student.uid);
   }
+
+  // reorderStudents(indexes) {
+  //   this.usersProvider.fetchInterestedStudents$(this.navParams.data.id)
+  //     .take(1)
+  //     .takeUntil(this.ngUnsubscribe)
+  //     .subscribe((students) => {
+  //       // get job being moved
+  //       const job = students[indexes.from];
+  //
+  //       // split around the insertion index
+  //       let left = [];
+  //       let right =[];
+  //       // remove the thing we are moving
+  //       if(indexes.from > indexes.to){
+  //         left = students.slice(0,indexes.to);
+  //         right = students.slice(indexes.to);
+  //         right = right.filter((obj)=>obj!==job);
+  //       }else{
+  //         left = students.slice(0,indexes.to+1);
+  //         right = students.slice(indexes.to+1);
+  //         left = left.filter((obj)=>obj!==job);
+  //       }
+  //
+  //       // [left] + obj + [right]
+  //       const reordered = [...left, job, ...right];
+  //
+  //       // update database
+  //       const itemRef = this.db.list(`jobs/${this.navParams.data.id}/students`);
+  //
+  //       itemRef.snapshotChanges()
+  //         .map((changes) => changes.map((obj) => obj.key))
+  //         .take(1)
+  //         .takeUntil(this.ngUnsubscribe)
+  //         .subscribe((keys) => {
+  //           keys.forEach((key, i) => {
+  //             itemRef.set(key, reordered[i])
+  //           });
+  //         });
+  //
+  //     });
+  // }
 
   get requirementsSectionArrow():string {
     return this.isRequirementsSectionCollapsed ?

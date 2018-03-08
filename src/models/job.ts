@@ -10,5 +10,6 @@ export interface Job {
   company: string;
   requirements: Requirement;
   session: Session;
+  students: string[];
   blacklist: string[];
 }
