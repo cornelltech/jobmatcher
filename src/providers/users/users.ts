@@ -89,15 +89,26 @@ export class UsersProvider {
         .map((student) => student as Student))
   }
 
-  fetchInterestedStudents$(jobId:string):Observable<Student[]> {
-    return this.fetchStudents$()
-      .map((students) => students
-        .filter((student) =>
-          (Object as any).values(student.jobs).indexOf(jobId) > -1
-        )
-      )
+  fetchInterestedStudentUids$(jobId:string) {
+    const itemRef = this.db.list(`jobs/${jobId}/students`);
+    return itemRef.valueChanges();
   }
 
+  fetchInterestedStudents$(jobId:string):Observable<Student[]> {
+    return Observable
+      .combineLatest(
+        this.fetchStudents$(),
+        this.fetchInterestedStudentUids$(jobId),
+          (students:Student[], uids:string[]) =>
+            ({students, uids})
+          )
+          .map((payload) =>
+          {
+            return payload.uids.map((key) =>
+              payload.students.find((obj) => obj.uid == key)
+            )}
+          )
+  }
 
   // TODO: add filter for companies, need to add company data first...
   fetchRecruiters$(company:Company=null):Observable<User[]> {

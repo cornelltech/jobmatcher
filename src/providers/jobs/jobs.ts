@@ -102,7 +102,7 @@ export class JobsProvider {
   addCurrentUserToInterestedStudentsList(jobId:string) {
     this.usersProvider.fetchMe$().take(1).subscribe((me) => {
       const itemRef = this.db.list(`jobs/${jobId}/students`);
-      itemRef.push(me.id);
+      itemRef.push(me.uid);
     })
   }
 
@@ -112,12 +112,12 @@ export class JobsProvider {
     user.take(1).subscribe((student) => {
       const itemRef = this.db.list(`jobs/${jobId}/students`);
       itemRef.valueChanges().take(1).subscribe((payload) => {
-        if(payload.indexOf(student.id) === -1) {
+        if(payload.indexOf(student.uid) === -1) {
           // console.log('??? this student not in list')
         } else {
           this.fetchJob$(jobId).take(1).subscribe((payload) => {
             Object.keys(payload.students).forEach((key) => {
-              if (payload.students[key] === student.id) {
+              if (payload.students[key] === student.uid) {
                 itemRef.remove(key);
               }
             })
