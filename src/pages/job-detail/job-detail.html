@@ -65,7 +65,7 @@
               </button>
             </ion-list-header>
 
-            <ion-list *ngIf="isOwner$ | async">
+            <ion-list *ngIf="isOwner$ | async" reorder="true" (ionItemReorder)="reorderStudents($event)">
               <ion-item *ngFor="let student of interestedStudents$ | async">
                 <button ion-item
                   (click)="goToStudent($event, student)">

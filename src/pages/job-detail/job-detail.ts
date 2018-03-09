@@ -178,46 +178,46 @@ export class JobDetailPage {
     this.jobsProvider.addToBlacklist(this.navParams.data.id, student.uid);
   }
 
-  // reorderStudents(indexes) {
-  //   this.usersProvider.fetchInterestedStudents$(this.navParams.data.id)
-  //     .take(1)
-  //     .takeUntil(this.ngUnsubscribe)
-  //     .subscribe((students) => {
-  //       // get job being moved
-  //       const job = students[indexes.from];
-  //
-  //       // split around the insertion index
-  //       let left = [];
-  //       let right =[];
-  //       // remove the thing we are moving
-  //       if(indexes.from > indexes.to){
-  //         left = students.slice(0,indexes.to);
-  //         right = students.slice(indexes.to);
-  //         right = right.filter((obj)=>obj!==job);
-  //       }else{
-  //         left = students.slice(0,indexes.to+1);
-  //         right = students.slice(indexes.to+1);
-  //         left = left.filter((obj)=>obj!==job);
-  //       }
-  //
-  //       // [left] + obj + [right]
-  //       const reordered = [...left, job, ...right];
-  //
-  //       // update database
-  //       const itemRef = this.db.list(`jobs/${this.navParams.data.id}/students`);
-  //
-  //       itemRef.snapshotChanges()
-  //         .map((changes) => changes.map((obj) => obj.key))
-  //         .take(1)
-  //         .takeUntil(this.ngUnsubscribe)
-  //         .subscribe((keys) => {
-  //           keys.forEach((key, i) => {
-  //             itemRef.set(key, reordered[i])
-  //           });
-  //         });
-  //
-  //     });
-  // }
+  reorderStudents(indexes) {
+    this.usersProvider.fetchInterestedStudentUids$(this.navParams.data.id)
+      .take(1)
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe((students) => {
+        // get student being moved
+        const student = students[indexes.from];
+
+        // split around the insertion index
+        let left = [];
+        let right =[];
+        // remove the thing we are moving
+        if(indexes.from > indexes.to){
+          left = students.slice(0,indexes.to);
+          right = students.slice(indexes.to);
+          right = right.filter((obj)=>obj!==student);
+        }else{
+          left = students.slice(0,indexes.to+1);
+          right = students.slice(indexes.to+1);
+          left = left.filter((obj)=>obj!==student);
+        }
+
+        // [left] + obj + [right]
+        const reordered = [...left, student, ...right];
+
+        // update database
+        const itemRef = this.db.list(`jobs/${this.navParams.data.id}/students`);
+
+        itemRef.snapshotChanges()
+          .map((changes) => changes.map((obj) => obj.key))
+          .take(1)
+          .takeUntil(this.ngUnsubscribe)
+          .subscribe((keys) => {
+            keys.forEach((key, i) => {
+              itemRef.set(key, reordered[i])
+            });
+          });
+
+      });
+  }
 
   get requirementsSectionArrow():string {
     return this.isRequirementsSectionCollapsed ?
