@@ -1,3 +1,4 @@
+import csv
 import os
 import pyrebase
 
@@ -34,12 +35,28 @@ def create_job(title, company_id, description, location, requirements):
 def add_job(db, job):
     db.child('jobs').push(job)
 
+def read_jobs_file(filename):
+    jobs = []
+    with open(filename, 'r') as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            title = row[0]
+            company = row[1]
+            description = row[2]
+            location = row[3]
+            requirements = row[4]
+            job = create_job(title, company, description, location, requirements)
+            jobs.append(job)
+    return jobs
+
 if __name__ == '__main__':
     firebase = pyrebase.initialize_app(config)
     auth = firebase.auth()
     db = firebase.database()
-    job = create_job('el prez', '-L5l3TP1ycq9ZMKZd-A8', 'presiding', 'washington, dc', 'visa3')
-    add_job(db, job)
+
+    jobs = read_jobs_file('jobs.csv')
+    for job in jobs:
+        add_job(db, job)
 
     users = db.child("jobs").get()
     print(users.val())
