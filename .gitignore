@@ -39,3 +39,4 @@ environment.ts
 # python files
 scripts/service-account-credentials.json
 scripts/env
+scripts/.env
