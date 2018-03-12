@@ -6,14 +6,13 @@ config = {
     "authDomain": "foundry-dev-192623.firebaseapp.com",
     "databaseURL": "https://foundry-dev-192623.firebaseio.com/",
     "storageBucket": "foundry-dev-192623.appspot.com",
+    # https://console.firebase.google.com/project/foundry-dev-192623/settings/serviceaccounts/adminsdk
+    "serviceAccount": "service-account-credentials.json"
 }
 
 firebase = pyrebase.initialize_app(config)
 
 auth = firebase.auth()
-
-# Log the user in
-user = auth.sign_in_with_email_and_password("rachel@rachel.com", "foobarbaz")
 
 # Get a reference to the database service
 db = firebase.database()
