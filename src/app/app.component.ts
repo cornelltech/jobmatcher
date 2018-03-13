@@ -35,15 +35,22 @@ export class MyApp {
           .subscribe((payload:boolean) => {
             if(routeToInvitation || routeToAffiliation) {
               // pass - let the DeepLinks do what they do
+              // TODO: reserve for invitation email
             }else if(payload) {
               // has valid session
               const uid:string = auth.afAuth.auth.currentUser.uid;
               userProvider.lookup$(uid)
                 .take(1)
                 .subscribe((payload:User) => {
-                  this.nav.setRoot(TabsPage, {
-                    me: payload
-                  });
+                  if(payload){
+                    // we have found a user
+                    this.nav.setRoot(TabsPage, {
+                      me: payload
+                    });
+                  }else{
+                    // we have not found a user
+                    this.rootPage = 'login-page';
+                  }
                 });
             }else{
               this.rootPage = 'login-page';
