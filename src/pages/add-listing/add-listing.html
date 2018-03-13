@@ -29,6 +29,16 @@
       <ion-label for="location">Location</ion-label>
       <ion-input type="text" formControlName="location"></ion-input>
     </ion-item>
+    <ion-list radio-group formControlName="status" type="radio">
+      <ion-item>
+        <ion-label>full-time</ion-label>
+        <ion-radio value="ft" checked></ion-radio>
+      </ion-item>
+      <ion-item>
+        <ion-label>internship</ion-label>
+        <ion-radio value="intern" checked></ion-radio>
+      </ion-item>
+    </ion-list>
     <ion-list radio-group formControlName="requirements" type="radio">
       <ion-item>
         <ion-label>visa1</ion-label>

@@ -12,4 +12,5 @@ export interface Job {
   session: Session;
   students: string[];
   blacklist: string[];
+  status?: 'intern' | 'ft'
 }
