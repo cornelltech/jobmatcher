@@ -96,6 +96,7 @@ def update_or_create_user(obj):
     # Clean up the values
     obj.pop('password', None)
     obj['email'] = email
+    obj['name'] = ' '.join([obj['firstName'], obj['lastName']])
     obj['uid'] = auth_user['localId']
 
     obj['permissions'] = {
@@ -130,8 +131,6 @@ def process_student_csv():
 
     for obj in objs:
         update_or_create_user(obj)
-
-
 
 
 def process_recruiter_csv():
