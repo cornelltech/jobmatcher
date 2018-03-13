@@ -23,15 +23,15 @@
     <ion-row>
       <ion-col offset-md-2 col-md-8>
         <ion-list [reorder]="faves" (ionItemReorder)="reorderJobs($event)">
-          <button ion-item
+          <button ion-item text-wrap
             *ngFor="let item of jobs$ | async"
             (click)="goToDetail($event, item)">
-              <!-- We dont have this data TODO: think about handling it -->
-              <!-- <ion-avatar item-start (click)="goToCompany($event, item.company)">
-                <img [src]="(companyLogo$(item) | async) || 'http://via.placeholder.com/50x50'">
-              </ion-avatar> -->
-              <h2>{{ item?.title }} </h2>
-              <h3>{{ item.company?.name }} </h3>
+              <!-- TODO figure this out -->
+              <ion-avatar item-start (click)="goToCompany($event, item.company)">
+                <img [src]="(getCompanyAvatarFromJob$(item) | async) || 'http://via.placeholder.com/50x50'">
+              </ion-avatar>
+              <h2>{{ item?.title }}</h2>
+              <h3>{{ getCompanyNameFromJob$(item) | async }}</h3>
               <p>{{ item?.description }}</p>
           </button>
         </ion-list>

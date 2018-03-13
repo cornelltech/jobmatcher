@@ -5,6 +5,7 @@ import 'rxjs/add/operator/mergeMap';
 
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { of } from 'rxjs/Observable/of';
 
 import { AngularFireDatabase } from 'angularfire2/database';
 
@@ -40,14 +41,21 @@ export class JobListingPage {
   companies$: Observable<Company[]>;
   faves:boolean;
 
-  constructor(public db: AngularFireDatabase, public navCtrl: NavController,
-    public navParams: NavParams, public modalCtrl: ModalController,
+  constructor(
+    public db: AngularFireDatabase,
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    public modalCtrl: ModalController,
     private companiesProvider: CompaniesProvider,
-    private jobsProvider: JobsProvider, private usersProvider: UsersProvider) {
+    private jobsProvider: JobsProvider,
+    private usersProvider: UsersProvider) {
       this.faves = this.navParams.data.faves;
+
   }
 
   ionViewDidLoad() {
+    this.companies$ = this.companiesProvider.fetchCompanies$();
+
     this.usersProvider
       .fetchMyPermissions$()
       .takeUntil(this.ngUnsubscribe)
@@ -61,8 +69,6 @@ export class JobListingPage {
           this.jobs$ = this.jobsProvider.fetchJobs$()
         }
       });
-
-    this.companies$ = this.companiesProvider.fetchCompanies$();
   }
 
   ionViewWillUnload():void {
@@ -128,5 +134,18 @@ export class JobListingPage {
           });
 
       });
+  }
+
+
+  getCompanyNameFromJob$(job:Job):Observable<string> {
+    return this.companiesProvider
+      .fetchCompany$(job.company)
+      .map((payload) => payload.name);
+  }
+
+  getCompanyAvatarFromJob$(job:Job):Observable<string> {
+    return this.companiesProvider
+      .fetchCompany$(job.company)
+      .map((payload) => payload.logo);
   }
 }
