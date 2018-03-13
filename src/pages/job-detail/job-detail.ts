@@ -53,6 +53,8 @@ export class JobDetailPage {
   requirementItems$:Observable<{key:string, value:any}[]>;
   status$:Observable<string>;
   visa$:Observable<string>;
+  degree$:Observable<string>;
+
   interestedStudents$:Observable<Student[]>;
 
   isOwner$:Observable<boolean>;
@@ -97,6 +99,16 @@ export class JobDetailPage {
         return 'Sponsors H1Bs on a case-by-case basis';
       }
     });
+
+    this.degree$ = this.job$.map((job) => {
+      if(job.degree === 'MBA') {
+        return 'MBAs only';
+      } else if (job.degree === 'technical') {
+        return 'Technical degrees only';
+      } else {
+        return 'Any degree is ok'
+      }
+    })
 
     this.requirementItems$ = this.requirement$
       .filter((payload) => payload && payload !== undefined)

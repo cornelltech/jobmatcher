@@ -54,6 +54,22 @@
         <ion-radio value="sometimes"></ion-radio>
       </ion-item>
     </ion-list>
+
+    <ion-list radio-group formControlName="degree" type="radio">
+      What kind of degrees are appropriate for this position?
+      <ion-item>
+        <ion-label>MBAs only</ion-label>
+        <ion-radio value="MBA" checked></ion-radio>
+      </ion-item>
+      <ion-item>
+        <ion-label>Technical degrees only</ion-label>
+        <ion-radio value="technical"></ion-radio>
+      </ion-item>
+      <ion-item>
+        <ion-label>Any degree is ok</ion-label>
+        <ion-radio value="any"></ion-radio>
+      </ion-item>
+    </ion-list>
     <ion-item>
       <ion-label for="description">Description</ion-label>
       <ion-textarea type="text" formControlName="description"></ion-textarea>

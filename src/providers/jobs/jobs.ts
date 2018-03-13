@@ -67,6 +67,19 @@ export class JobsProvider {
         }
         return true;
       })
+      .filter((job) => {
+        // degrees
+        if('program' in payload.me) {
+          let mba = (payload.me as Student).program === 'MBA';
+          if(job.degree === 'MBA') {
+            return mba;
+          } else if(job.degree === 'technical') {
+            return !mba;
+          }
+        }
+        // job accepts any degree, or user is not a student
+        return true;
+      })
     );
   }
 

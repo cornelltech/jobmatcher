@@ -12,6 +12,7 @@ export interface Job {
   session: Session;
   students: string[];
   blacklist: string[];
-  status?: 'intern' | 'ft'
-  visa?: 'yes' | 'no' | 'sometimes'
+  status?: 'intern' | 'ft';
+  visa?: 'yes' | 'no' | 'sometimes';
+  degree?: 'MBA' | 'technical' | 'any';
 }

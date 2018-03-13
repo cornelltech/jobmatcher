@@ -61,7 +61,8 @@ export class AddListingPage {
       status: ['', [Validators.required]],
       location: ['', [Validators.required]],
       description: ['', [Validators.required]],
-      visa: ['', [Validators.required]]
+      visa: ['', [Validators.required]],
+      degree: ['', [Validators.required]],
     })
   }
 
