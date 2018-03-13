@@ -6,7 +6,6 @@
 -->
 
 <ion-header>
-
   <ion-navbar>
     <ion-title>Add job listing</ion-title>
     <ion-buttons end>
@@ -15,67 +14,72 @@
       </button>
     </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
 
 <ion-content padding>
-  <form [formGroup]="form" (ngSubmit)="onFormSubmit()">
+  <form [formGroup]="form" (ngSubmit)="onFormSubmit()" color="secondary">
     <ion-item>
-      <ion-label for="title">Title</ion-label>
+      <ion-label color="secondary" floating for="title">Title</ion-label>
       <ion-input type="text" formControlName="title"></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label for="location">Location</ion-label>
+      <ion-label color="secondary" floating for="location">Location</ion-label>
       <ion-input type="text" formControlName="location"></ion-input>
     </ion-item>
     <ion-list radio-group formControlName="status" type="radio">
       <ion-item>
         <ion-label>full-time</ion-label>
-        <ion-radio value="ft" checked></ion-radio>
+        <ion-radio color="secondary" value="ft" checked></ion-radio>
       </ion-item>
       <ion-item>
         <ion-label>internship</ion-label>
-        <ion-radio value="intern" checked></ion-radio>
+        <ion-radio color="secondary" value="intern" checked></ion-radio>
       </ion-item>
     </ion-list>
     <ion-list radio-group formControlName="visa" type="radio">
-      Will your company sponsor H1B visas for this position?
+      <ion-list-header>
+          Will your company sponsor H1B visas for this position?
+      </ion-list-header>
       <ion-item>
         <ion-label>Yes</ion-label>
-        <ion-radio value="yes" checked></ion-radio>
+        <ion-radio color="secondary" value="yes" checked></ion-radio>
       </ion-item>
       <ion-item>
         <ion-label>No</ion-label>
-        <ion-radio value="no"></ion-radio>
+        <ion-radio color="secondary" value="no"></ion-radio>
       </ion-item>
       <ion-item>
         <ion-label>On a case-by-case basis</ion-label>
-        <ion-radio value="sometimes"></ion-radio>
+        <ion-radio color="secondary" value="sometimes"></ion-radio>
       </ion-item>
     </ion-list>
 
     <ion-list radio-group formControlName="degree" type="radio">
-      What kind of degrees are appropriate for this position?
+      <ion-list-header>
+          What kind of degrees are appropriate for this position?
+      </ion-list-header>
+      
       <ion-item>
         <ion-label>MBAs only</ion-label>
-        <ion-radio value="MBA" checked></ion-radio>
+        <ion-radio color="secondary" value="MBA" checked></ion-radio>
       </ion-item>
       <ion-item>
         <ion-label>Technical degrees only</ion-label>
-        <ion-radio value="technical"></ion-radio>
+        <ion-radio color="secondary" value="technical"></ion-radio>
       </ion-item>
       <ion-item>
         <ion-label>Any degree is ok</ion-label>
-        <ion-radio value="any"></ion-radio>
+        <ion-radio color="secondary" value="any"></ion-radio>
       </ion-item>
     </ion-list>
     <ion-item>
-      <ion-label for="description">Description</ion-label>
+      <ion-label color="secondary" floating for="description">Description</ion-label>
       <ion-textarea type="text" formControlName="description"></ion-textarea>
     </ion-item>
+
     <ion-buttons>
-      <button ion-button type="submit" [disabled]="!form.valid">Submit</button>
+      <button full ion-button color="secondary" type="submit" [disabled]="!form.valid">Submit</button>
     </ion-buttons>
   </form>
 </ion-content>
