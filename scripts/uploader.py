@@ -55,7 +55,6 @@ def read_csv_file(filename):
     return objs
 
 
-
 """
 Helper interface to handle the auth_user object
 that we use in firebase for authentication
@@ -91,7 +90,8 @@ def update_or_create_user(obj):
     _key = None
 
     _users = db.child("users").get()
-    for _user in _users.each():
+
+    for _user in _users.each() or []:
         _user_dict = _user.val()
         if _user_dict.get('uid', None) == auth_user['localId']:
             user = _user_dict
@@ -130,7 +130,7 @@ def update_or_create_company(obj):
     _key = None
 
     _companies = db.child('companies').get()
-    for _company in _companies.each():
+    for _company in _companies.each() or []:
         _company_dict = _company.val()
         if _company_dict.get('name', None) == obj['name']:
             company = _company_dict
@@ -159,7 +159,7 @@ def update_or_create_recruiter(obj):
     _key = None
 
     _users = db.child("users").get()
-    for _user in _users.each():
+    for _user in _users.each() or []:
         _user_dict = _user.val()
         if _user_dict.get('uid', None) == auth_user['localId']:
             user = _user_dict
@@ -195,6 +195,40 @@ def update_or_create_recruiter(obj):
     return user, _key
 
 
+def update_or_create_job(obj):
+    # create a user obj or update the existing one
+    job = None
+    _key = None
+
+    _jobs = db.child("jobs").get()
+    for _job in _jobs.each() or []:
+        _job_dict = _job.val()
+        if _job_dict.get('title', None) == obj['title']:
+            job = _job_dict
+            _key = _job.key()
+            break
+
+    # we need a ref to the company
+    company, company_ref = update_or_create_company({'name': obj['company']})
+
+    # Clean up the values
+    obj['company'] = company_ref
+
+    if _key is None:
+        # we are creating
+        _ref = db.child('jobs')
+        _ref.push(obj)
+    else:
+        # we are updating
+        base_obj = job
+        for key in obj:
+            base_obj[key] = obj[key]
+
+        _ref = db.child('jobs').child(_key)
+        _ref.update(base_obj)
+
+    return job, _key
+
 """
 In a perfect world, all three process csv file functions can be
 combined into one general one since they do the same thing.
@@ -226,7 +260,11 @@ def process_recruiter_csv():
 
 
 def process_jobs_csv():
-    pass
+    _file = os.path.join(base_dir_path, 'jobs.csv')
+    objs = read_csv_file(_file)
+
+    for obj in objs:
+        update_or_create_job(obj)
 
 
 if __name__ == '__main__':
