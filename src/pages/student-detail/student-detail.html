@@ -9,9 +9,9 @@
   <ion-navbar>
     <ion-title>{{ (student$ | async)?.name }}</ion-title>
     <ion-buttons end>
-      <button *ngIf="isOwner$|async" (click)="isEditing = true" ion-button icon-only>
+      <!-- <button *ngIf="isOwner$|async" (click)="isEditing = true" ion-button icon-only>
         <ion-icon name="create"></ion-icon>
-      </button>
+      </button> -->
       <button ion-button icon-only (click)="openSettingsModal()">
         <ion-icon name="settings"></ion-icon>
       </button>
