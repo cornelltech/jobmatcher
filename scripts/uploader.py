@@ -76,7 +76,7 @@ def update_or_create_user(obj):
         auth_user = auth.create_user_with_email_and_password(
             email, obj['password']
         )
-    except Exception as e:
+    except Exception:
         auth_user = auth.sign_in_with_email_and_password(
             email, obj['password']
         )
