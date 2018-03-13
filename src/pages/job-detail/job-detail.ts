@@ -5,7 +5,7 @@ import 'rxjs/add/operator/take';
 import 'rxjs/add/observable/combineLatest';
 
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, ModalController } from 'ionic-angular';
 
 import { AngularFireDatabase } from 'angularfire2/database';
 
@@ -63,6 +63,7 @@ export class JobDetailPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public modalCtrl: ModalController,
+    public alertCtrl: AlertController,
     private jobsProvider: JobsProvider,
     private companiesProvider: CompaniesProvider,
     private usersProvider: UsersProvider) {
@@ -185,10 +186,30 @@ export class JobDetailPage {
       }));
   }
 
-  removeStudentFromJob(student:Student) {
-    this.usersProvider.unfavoriteJob(this.navParams.data.id, student.uid);
-    this.jobsProvider.removeUserFromInterestedStudentsList(this.navParams.data.id, student.uid)
-    this.jobsProvider.addToBlacklist(this.navParams.data.id, student.uid);
+  removeStudentFromJob(evt:any, student:Student) {
+    evt.stopPropagation();
+
+    let alert = this.alertCtrl.create({
+      title: 'Remove Student?',
+      message: 'Do you want to remove this student from this job?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => { }
+        },
+        {
+          text: 'Remove',
+          handler: () => {
+            this.usersProvider.unfavoriteJob(this.navParams.data.id, student.uid);
+            this.jobsProvider.removeUserFromInterestedStudentsList(this.navParams.data.id, student.uid)
+            this.jobsProvider.addToBlacklist(this.navParams.data.id, student.uid);
+          }
+        }
+      ]
+    });
+    alert.present();
+
   }
 
   reorderStudents(indexes) {
