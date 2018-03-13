@@ -44,43 +44,9 @@ export class JobsProvider {
       (jobs:Job[], me:User) => ({jobs, me})
     )
     .map((payload) => payload.jobs
-      .filter((job) => {
-        if(job.blacklist) {
-          return (Object as any).values(job.blacklist).indexOf(payload.me.uid) == -1;
-        } else {
-          return true; // this job has no blacklist
-        }
-      })
-      .filter((job) => {
-        // ft vs intern
-        if('year' in payload.me) {
-          let grad = (payload.me as Student).year;
-          const isFt:boolean = job.status == 'ft';
-          return grad > 2018 ? !isFt : isFt;
-        }
-        return true;
-      })
-      .filter((job) => {
-        // visas
-        if('needsVisa' in payload.me) {
-          const needsVisa:boolean = (payload.me as Student).needsVisa == 'true';
-          return needsVisa ? (['yes', 'sometimes'].indexOf(job.visa) > -1) : true;
-        }
-        return true;
-      })
-      .filter((job) => {
-        // degrees
-        if('program' in payload.me) {
-          let mba = (payload.me as Student).program == 'MBA';
-          if(job.degree == 'MBA') {
-            return mba;
-          } else if(job.degree == 'technical') {
-            return !mba;
-          }
-        }
-        // job accepts any degree, or user is not a student
-        return true;
-      })
+      .filter((job) =>
+        this.canUserAccessJob(payload.me, job)
+      )
     );
   }
 
@@ -155,6 +121,40 @@ export class JobsProvider {
         }
       })
     })
+  }
+
+
+  canUserAccessJob(user:User, job:Job):boolean {
+
+    let isNotBlackListed:boolean = true;
+    if('blacklist' in job) {
+      isNotBlackListed = (Object as any).values(job.blacklist).indexOf(user.uid) == -1;
+    }
+    
+    let isFtMatch:boolean = true;
+    if('year' in user) {
+      let grad = (user as Student).year;
+      const isFt:boolean = job.status == 'ft';
+      isFtMatch = grad > 2018 ? !isFt : isFt;
+    }
+
+    let isVisaMatch:boolean = true;
+    if('needsVisa' in user) {
+      const needsVisa:boolean = (user as Student).needsVisa == 'true';
+      isVisaMatch = needsVisa ? (['yes', 'sometimes'].indexOf(job.visa) > -1) : true;
+    }
+
+    let isProgramMatch:boolean = true;
+    if('program' in user) {
+      let mba = (user as Student).program == 'MBA';
+      if(job.degree == 'MBA') {
+        isProgramMatch = mba;
+      } else if(job.degree == 'technical') {
+        isProgramMatch = !mba;
+      }
+    }
+
+    return isNotBlackListed && isFtMatch && isVisaMatch && isProgramMatch;
   }
 
 }

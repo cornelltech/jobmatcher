@@ -11,7 +11,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 
 import { Company } from '../../models/company';
 import { Job } from '../../models/job';
-import { Student } from '../../models/user';
+import { User, Student } from '../../models/user';
 import { Permission } from '../../models/permission';
 
 import { CompaniesProvider } from '../../providers/companies/companies';
@@ -67,14 +67,33 @@ export class JobDetailPage {
     private jobsProvider: JobsProvider,
     private companiesProvider: CompaniesProvider,
     private usersProvider: UsersProvider) {
+
+      this.job$ = this.jobsProvider
+        .fetchJob$(this.navParams.data.id);
+
+  }
+
+  ionViewCanEnter() {
+    Observable
+      .combineLatest(
+        this.job$,
+        this.usersProvider.fetchMe$(),
+          (job, me) => ({job, me})
+      )
+      .take(1)
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe((payload) => {
+        const me:User = payload.me;
+        const job:Job = payload.job;
+        return this.jobsProvider.canUserAccessJob(me, job);
+      });
   }
 
   ionViewDidLoad() {
     //console.log('ionViewDidLoad JobDetailPage');
     //console.log('data id', this.navParams.data.id);
 
-    this.job$ = this.jobsProvider
-      .fetchJob$(this.navParams.data.id);
+    
 
     this.company$ = this.job$
       .switchMap((payload) => this.companiesProvider.fetchCompany$(payload.company));
