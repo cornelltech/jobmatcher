@@ -1,5 +1,4 @@
 import {Company} from './company';
-import {Requirement} from './requirement';
 import {Session} from './session';
 
 export interface Job {
@@ -8,7 +7,6 @@ export interface Job {
   description: string;
   location: string;
   company: string;
-  requirements: Requirement;
   session: Session;
   students: string[];
   blacklist: string[];
