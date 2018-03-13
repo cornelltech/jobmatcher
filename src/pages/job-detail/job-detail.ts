@@ -12,7 +12,6 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import { Company } from '../../models/company';
 import { Job } from '../../models/job';
 import { Student } from '../../models/user';
-import { Requirement } from '../../models/requirement';
 import { Permission } from '../../models/permission';
 
 import { CompaniesProvider } from '../../providers/companies/companies';
@@ -48,9 +47,6 @@ export class JobDetailPage {
 
   job$:Observable<Job>;
   company$:Observable<Company>;
-  // TODO: this is in a really untidy state wrt requirements
-  requirement$:Observable<Requirement>;
-  requirementItems$:Observable<{key:string, value:any}[]>;
   status$:Observable<string>;
   visa$:Observable<string>;
   degree$:Observable<string>;
@@ -84,9 +80,6 @@ export class JobDetailPage {
 
     this.isFavoritedJob$ = this.usersProvider.isFavoritedJob$(this.navParams.data.id);
 
-    this.requirement$ = this.job$
-      .map((payload) => payload.requirements);
-
     this.status$ = this.job$.map((payload) =>
       payload.status === 'ft' ? 'Full-time' : 'Internship');
 
@@ -109,13 +102,6 @@ export class JobDetailPage {
         return 'Any degree is ok'
       }
     })
-
-    this.requirementItems$ = this.requirement$
-      .filter((payload) => payload && payload !== undefined)
-      .map((payload) => Object.keys(payload)
-        .filter((key) => (key !== 'id'))
-        .map((key) => ({key:key, value:payload[key]}))
-      );
 
     this.interestedStudents$ = this.usersProvider
       .fetchInterestedStudents$(this.navParams.data.id);
