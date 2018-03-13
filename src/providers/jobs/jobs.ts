@@ -52,28 +52,29 @@ export class JobsProvider {
         }
       })
       .filter((job) => {
-        // FT vs internships
+        // ft vs intern
         if('year' in payload.me) {
           let grad = (payload.me as Student).year;
-          return grad > 2018 ? job.status === 'intern' : job.status === 'ft';
+          const isFt:boolean = job.status == 'ft';
+          return grad > 2018 ? !isFt : isFt;
         }
         return true;
       })
       .filter((job) => {
         // visas
         if('needsVisa' in payload.me) {
-          let permissionToWork = !(payload.me as Student).needsVisa;
-          return permissionToWork || (job.visa === 'yes' || job.visa === 'sometimes')
+          const needsVisa:boolean = (payload.me as Student).needsVisa == 'true';
+          return needsVisa ? (['yes', 'sometimes'].indexOf(job.visa) > -1) : true;
         }
         return true;
       })
       .filter((job) => {
         // degrees
         if('program' in payload.me) {
-          let mba = (payload.me as Student).program === 'MBA';
-          if(job.degree === 'MBA') {
+          let mba = (payload.me as Student).program == 'MBA';
+          if(job.degree == 'MBA') {
             return mba;
-          } else if(job.degree === 'technical') {
+          } else if(job.degree == 'technical') {
             return !mba;
           }
         }
