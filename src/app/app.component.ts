@@ -43,6 +43,7 @@ export class MyApp {
                 .take(1)
                 .subscribe((payload:User) => {
                   if(payload){
+                    
                     // we have found a user
                     this.nav.setRoot(TabsPage, {
                       me: payload

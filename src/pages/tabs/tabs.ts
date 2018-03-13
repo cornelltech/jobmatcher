@@ -46,15 +46,16 @@ export class TabsPage {
   permission$:Observable<Permission>;
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UsersProvider) {
-    const me:User = this.navParams.get('me');
-    if(me){
-      this.setupTabs(me);
-    }else{
-      // TODO: Figure out a more graceful fallback
-    }
-
-
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private userProvider: UsersProvider) {
+      const me:User = this.navParams.get('me');
+      if(me){
+        this.setupTabs(me);
+      }else{
+        // TODO: Figure out a more graceful fallback
+      }
   }
 
   ionViewDidLoad() { }
@@ -66,7 +67,8 @@ export class TabsPage {
 
   setupTabs(user:User){
     const permissions:Permission = user ? user.permission : null;
-    if(permissions.userType === 'administrator') {
+
+    if(permissions && permissions.userType === 'administrator') {
       this.color = "danger";
       this.tabs = [
         {
@@ -86,7 +88,7 @@ export class TabsPage {
         }
       ];
 
-    }else if(permissions.userType === 'recruiter') {
+    }else if(permissions && permissions.userType === 'recruiter') {
       this.color = "secondary";
       this.tabs = [
         {

@@ -104,7 +104,7 @@ def update_or_create_user(obj):
     obj['name'] = ' '.join([obj['firstName'], obj['lastName']])
     obj['uid'] = auth_user['localId']
 
-    obj['permissions'] = {
+    obj['permission'] = {
         'userType': 'student'
     }
 
@@ -176,7 +176,7 @@ def update_or_create_recruiter(obj):
     obj['name'] = ' '.join([obj['firstName'], obj['lastName']])
     obj['uid'] = auth_user['localId']
 
-    obj['permissions'] = {
+    obj['permission'] = {
         'userType': 'recruiter',
         'affiliation': company_ref
     }
