@@ -9,6 +9,10 @@
 log.txt
 *.sublime-project
 *.sublime-workspace
+*.pyc
+*.csv
+env/
+.env
 .vscode/
 npm-debug.log*
 
@@ -32,6 +36,7 @@ plugins/ios.json
 www/
 $RECYCLE.BIN/
 
+serviceAccountKey.json
 .DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
