@@ -111,7 +111,8 @@ def update_or_create_user(obj):
     if _key is None:
         # we are creating
         _ref = db.child('users')
-        _ref.push(obj)
+        res = _ref.push(obj)
+        _key = res['name']
     else:
         # we are updating
         base_obj = user
@@ -139,7 +140,8 @@ def update_or_create_company(obj):
 
     if _key is None:
         _ref = db.child('companies')
-        _ref.push(obj)
+        res = _ref.push(obj)
+        _key = res['name']
     else:
         base_obj = company
         for key in obj:
@@ -182,7 +184,8 @@ def update_or_create_recruiter(obj):
     if _key is None:
         # we are creating
         _ref = db.child('users')
-        _ref.push(obj)
+        res = _ref.push(obj)
+        _key = res['name']
     else:
         # we are updating
         base_obj = user
@@ -217,7 +220,8 @@ def update_or_create_job(obj):
     if _key is None:
         # we are creating
         _ref = db.child('jobs')
-        _ref.push(obj)
+        res = _ref.push(obj)
+        _key = res['name']
     else:
         # we are updating
         base_obj = job
