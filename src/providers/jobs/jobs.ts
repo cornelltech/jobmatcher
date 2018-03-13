@@ -59,6 +59,14 @@ export class JobsProvider {
         }
         return true;
       })
+      .filter((job) => {
+        // visas
+        if('needsVisa' in payload.me) {
+          let permissionToWork = !(payload.me as Student).needsVisa;
+          return permissionToWork || (job.visa === 'yes' || job.visa === 'sometimes')
+        }
+        return true;
+      })
     );
   }
 

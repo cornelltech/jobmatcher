@@ -13,4 +13,5 @@ export interface Job {
   students: string[];
   blacklist: string[];
   status?: 'intern' | 'ft'
+  visa?: 'yes' | 'no' | 'sometimes'
 }

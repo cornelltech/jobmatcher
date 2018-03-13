@@ -58,6 +58,10 @@
                 <ion-icon item-start name="checkmark-circle-outline"></ion-icon>
                 {{ status$ | async }}
               </ion-item>
+              <ion-item>
+                <ion-icon item-start name="checkmark-circle-outline"></ion-icon>
+                {{ visa$ | async }}
+              </ion-item>
             </ion-list>
             <!-- Interested People -->
             <ion-list-header *ngIf="isOwner$ | async">

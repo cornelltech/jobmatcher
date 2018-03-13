@@ -52,6 +52,7 @@ export class JobDetailPage {
   requirement$:Observable<Requirement>;
   requirementItems$:Observable<{key:string, value:any}[]>;
   status$:Observable<string>;
+  visa$:Observable<string>;
   interestedStudents$:Observable<Student[]>;
 
   isOwner$:Observable<boolean>;
@@ -86,6 +87,16 @@ export class JobDetailPage {
 
     this.status$ = this.job$.map((payload) =>
       payload.status === 'ft' ? 'Full-time' : 'Internship');
+
+    this.visa$ = this.job$.map((job) => {
+      if(job.visa === 'yes') {
+        return 'Sponsors H1Bs';
+      } else if(job.visa === 'no') {
+        return 'Does not sponsor H1Bs';
+      } else {
+        return 'Sponsors H1Bs on a case-by-case basis';
+      }
+    });
 
     this.requirementItems$ = this.requirement$
       .filter((payload) => payload && payload !== undefined)
