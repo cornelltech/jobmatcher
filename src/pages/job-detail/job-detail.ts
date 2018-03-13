@@ -48,8 +48,10 @@ export class JobDetailPage {
 
   job$:Observable<Job>;
   company$:Observable<Company>;
+  // TODO: this is in a really untidy state wrt requirements
   requirement$:Observable<Requirement>;
   requirementItems$:Observable<{key:string, value:any}[]>;
+  status$:Observable<string>;
   interestedStudents$:Observable<Student[]>;
 
   isOwner$:Observable<boolean>;
@@ -81,6 +83,9 @@ export class JobDetailPage {
 
     this.requirement$ = this.job$
       .map((payload) => payload.requirements);
+
+    this.status$ = this.job$.map((payload) =>
+      payload.status === 'ft' ? 'Full-time' : 'Internship');
 
     this.requirementItems$ = this.requirement$
       .filter((payload) => payload && payload !== undefined)
