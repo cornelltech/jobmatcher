@@ -1,8 +1,10 @@
 import os
 import csv
+import uuid
 
 import firebase_admin
 from firebase_admin import credentials
+from firebase_admin import db
 
 base_dir_path = os.path.dirname(os.path.realpath(__file__))
 credential_dir_path = os.path.join(base_dir_path, 'serviceAccountKey.json')
@@ -11,17 +13,12 @@ cred = credentials.Certificate(credential_dir_path)
 app = firebase_admin.initialize_app(cred)
 
 
-student_list = []
-recruiter_list = []
-invitation_list = []
-
-
 def generate_invitation_email():
     pass
 
 
 def generate_invitation_code():
-    pass
+    return uuid.uuid4()
 
 
 def read_csv_file(filename):
@@ -40,7 +37,7 @@ def read_csv_file(filename):
             for j, val in enumerate(row):
                 obj[header[j]] = val
             objs.append(obj)
-    return obj
+    return objs
 
 
 def create_invitation():
@@ -48,17 +45,32 @@ def create_invitation():
 
 
 def process_student_csv():
-    pass
+    _file = os.path.join(base_dir_path, 'student.csv')
+    objs = read_csv_file(_file)
+
+    for obj in objs:
+        _ref = db.reference(path='/invitations', app=app)
+        # obj['uuid'] = generate_invitation_code()
+
+        # _ref.push(obj)
 
 
 def process_recruiter_csv():
     pass
 
 
+def process_jobs_csv():
+    pass
+
+
 if __name__ == '__main__':
+    print('--------------------')
     print('JobMatcher Uploader')
     print('\tEnsure there is a student.csv and '
           'recruiter.csv file in the same dir')
 
-    student_file = os.path.join(base_dir_path, 'student.csv')
-    read_csv_file(student_file)
+    process_student_csv()
+
+    process_recruiter_csv()
+
+    process_jobs_csv()
