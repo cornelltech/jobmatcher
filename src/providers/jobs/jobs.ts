@@ -10,7 +10,7 @@ import { of } from 'rxjs/observable/of';
 import { AngularFireDatabase } from 'angularfire2/database';
 
 import { Job } from '../../models/job';
-import { User } from '../../models/user';
+import { User, Student } from '../../models/user';
 
 import { UsersProvider } from '../../providers/users/users';
 
@@ -50,6 +50,14 @@ export class JobsProvider {
         } else {
           return true; // this job has no blacklist
         }
+      })
+      .filter((job) => {
+        // FT vs internships
+        if('year' in payload.me) {
+          let grad = (payload.me as Student).year;
+          return grad > 2018 ? job.status === 'intern' : job.status === 'ft';
+        }
+        return true;
       })
     );
   }
