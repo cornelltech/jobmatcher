@@ -12,7 +12,6 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import { Company } from '../../models/company';
 import { Job } from '../../models/job';
 import { Student } from '../../models/user';
-import { Requirement } from '../../models/requirement';
 import { Permission } from '../../models/permission';
 
 import { CompaniesProvider } from '../../providers/companies/companies';
@@ -48,8 +47,10 @@ export class JobDetailPage {
 
   job$:Observable<Job>;
   company$:Observable<Company>;
-  requirement$:Observable<Requirement>;
-  requirementItems$:Observable<{key:string, value:any}[]>;
+  status$:Observable<string>;
+  visa$:Observable<string>;
+  degree$:Observable<string>;
+
   interestedStudents$:Observable<Student[]>;
 
   isOwner$:Observable<boolean>;
@@ -79,15 +80,28 @@ export class JobDetailPage {
 
     this.isFavoritedJob$ = this.usersProvider.isFavoritedJob$(this.navParams.data.id);
 
-    this.requirement$ = this.job$
-      .map((payload) => payload.requirements);
+    this.status$ = this.job$.map((payload) =>
+      payload.status === 'ft' ? 'Full-time' : 'Internship');
 
-    this.requirementItems$ = this.requirement$
-      .filter((payload) => payload && payload !== undefined)
-      .map((payload) => Object.keys(payload)
-        .filter((key) => (key !== 'id'))
-        .map((key) => ({key:key, value:payload[key]}))
-      );
+    this.visa$ = this.job$.map((job) => {
+      if(job.visa === 'yes') {
+        return 'Sponsors H1Bs';
+      } else if(job.visa === 'no') {
+        return 'Does not sponsor H1Bs';
+      } else {
+        return 'Sponsors H1Bs on a case-by-case basis';
+      }
+    });
+
+    this.degree$ = this.job$.map((job) => {
+      if(job.degree === 'MBA') {
+        return 'MBAs only';
+      } else if (job.degree === 'technical') {
+        return 'Technical degrees only';
+      } else {
+        return 'Any degree is ok'
+      }
+    })
 
     this.interestedStudents$ = this.usersProvider
       .fetchInterestedStudents$(this.navParams.data.id);

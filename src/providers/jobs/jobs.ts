@@ -10,7 +10,7 @@ import { of } from 'rxjs/observable/of';
 import { AngularFireDatabase } from 'angularfire2/database';
 
 import { Job } from '../../models/job';
-import { User } from '../../models/user';
+import { User, Student } from '../../models/user';
 
 import { UsersProvider } from '../../providers/users/users';
 
@@ -50,6 +50,35 @@ export class JobsProvider {
         } else {
           return true; // this job has no blacklist
         }
+      })
+      .filter((job) => {
+        // FT vs internships
+        if('year' in payload.me) {
+          let grad = (payload.me as Student).year;
+          return grad > 2018 ? job.status === 'intern' : job.status === 'ft';
+        }
+        return true;
+      })
+      .filter((job) => {
+        // visas
+        if('needsVisa' in payload.me) {
+          let permissionToWork = !(payload.me as Student).needsVisa;
+          return permissionToWork || (job.visa === 'yes' || job.visa === 'sometimes')
+        }
+        return true;
+      })
+      .filter((job) => {
+        // degrees
+        if('program' in payload.me) {
+          let mba = (payload.me as Student).program === 'MBA';
+          if(job.degree === 'MBA') {
+            return mba;
+          } else if(job.degree === 'technical') {
+            return !mba;
+          }
+        }
+        // job accepts any degree, or user is not a student
+        return true;
       })
     );
   }

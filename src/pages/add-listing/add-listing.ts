@@ -58,9 +58,11 @@ export class AddListingPage {
   createForm():void {
     this.form = this.fb.group({
       title: ['', [Validators.required]],
+      status: ['', [Validators.required]],
       location: ['', [Validators.required]],
       description: ['', [Validators.required]],
-      requirements: ['', [Validators.required]]
+      visa: ['', [Validators.required]],
+      degree: ['', [Validators.required]],
     })
   }
 

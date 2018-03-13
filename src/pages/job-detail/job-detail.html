@@ -53,10 +53,20 @@
                 <ion-icon [name]="requirementsSectionArrow"></ion-icon>
               </button>
             </ion-list-header>
-
-            <ion-icon item-start name="checkmark-circle-outline"></ion-icon>
-            {{ requirement$ | async }}
-
+            <ion-list>
+              <ion-item>
+                <ion-icon item-start name="checkmark-circle-outline"></ion-icon>
+                {{ status$ | async }}
+              </ion-item>
+              <ion-item>
+                <ion-icon item-start name="checkmark-circle-outline"></ion-icon>
+                {{ visa$ | async }}
+              </ion-item>
+              <ion-item>
+                <ion-icon item-start name="checkmark-circle-outline"></ion-icon>
+                {{ degree$ | async }}
+              </ion-item>
+            </ion-list>
             <!-- Interested People -->
             <ion-list-header *ngIf="isOwner$ | async">
               Interested

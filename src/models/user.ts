@@ -15,4 +15,5 @@ export interface Student extends User {
   year:number;
   program: 'CS' | 'CM' | 'HT' | 'LLM' | 'MBA' | 'ORIE' | 'ECE' | 'DESIGN';
   resumeLink: string;
+  needsVisa: boolean;
 }
