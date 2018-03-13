@@ -166,7 +166,6 @@ export class JobDetailPage {
   }
 
   addFavorite() {
-    console.log('hi hello what up')
     this.job$
       .take(1)
       .mergeMap((job) => this.usersProvider.isFavoritedJob$(job.id).take(1),
