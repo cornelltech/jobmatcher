@@ -1,6 +1,5 @@
 import os
 import csv
-import uuid
 
 import pyrebase
 
@@ -33,14 +32,6 @@ auth = app.auth()
 db = app.database()
 
 
-def generate_invitation_email():
-    pass
-
-
-def generate_invitation_code():
-    return str(uuid.uuid4())
-
-
 def generate_netid_email(netid):
     return '{0}@cornell.edu'.format(netid)
 
@@ -64,22 +55,36 @@ def read_csv_file(filename):
     return objs
 
 
-def create_invitation():
-    pass
+
+"""
+Helper interface to handle the auth_user object
+that we use in firebase for authentication
+"""
+
+
+def get_or_create_auth_user(email, password):
+    try:
+        user = auth.create_user_with_email_and_password(
+            email, password
+        )
+    except Exception:
+        user = auth.sign_in_with_email_and_password(
+            email, password
+        )
+    return user
+
+
+"""
+In a perfect world, all four update_create
+helper functions can be combined into one general one.
+"""
 
 
 def update_or_create_user(obj):
     # create an auth user object or login
     email = generate_netid_email(obj['netId'])
 
-    try:
-        auth_user = auth.create_user_with_email_and_password(
-            email, obj['password']
-        )
-    except Exception:
-        auth_user = auth.sign_in_with_email_and_password(
-            email, obj['password']
-        )
+    auth_user = get_or_create_auth_user(email, obj['password'])
 
     # create a user obj or update the existing one
     user = None
@@ -109,20 +114,91 @@ def update_or_create_user(obj):
         _ref.push(obj)
     else:
         # we are updating
-        base_user = user
+        base_obj = user
         for key in obj:
-            base_user[key] = obj[key]
+            base_obj[key] = obj[key]
 
         _ref = db.child('users').child(_key)
-        _ref.update(base_user)
+        _ref.update(base_obj)
+
+    return user, _key
 
 
-def create_company():
-    pass
+def update_or_create_company(obj):
+
+    company = None
+    _key = None
+
+    _companies = db.child('companies').get()
+    for _company in _companies.each():
+        _company_dict = _company.val()
+        if _company_dict.get('name', None) == obj['name']:
+            company = _company_dict
+            _key = _company.key()
+            break
+
+    if _key is None:
+        _ref = db.child('companies')
+        _ref.push(obj)
+    else:
+        base_obj = company
+        for key in obj:
+            base_obj[key] = obj[key]
+
+        _ref = db.child('companies').child(_key)
+        _ref.update(base_obj)
+
+    return company, _key
 
 
-def create_job():
-    pass
+def update_or_create_recruiter(obj):
+    auth_user = get_or_create_auth_user(obj['email'], obj['password'])
+
+    # create a user obj or update the existing one
+    user = None
+    _key = None
+
+    _users = db.child("users").get()
+    for _user in _users.each():
+        _user_dict = _user.val()
+        if _user_dict.get('uid', None) == auth_user['localId']:
+            user = _user_dict
+            _key = _user.key()
+            break
+
+    # we need a ref to the company
+    company, company_ref = update_or_create_company({'name': obj['company']})
+
+    # Clean up the values
+    obj.pop('password', None)
+    obj['name'] = ' '.join([obj['firstName'], obj['lastName']])
+    obj['uid'] = auth_user['localId']
+
+    obj['permissions'] = {
+        'userType': 'recruiter',
+        'affiliation': company_ref
+    }
+
+    if _key is None:
+        # we are creating
+        _ref = db.child('users')
+        _ref.push(obj)
+    else:
+        # we are updating
+        base_obj = user
+        for key in obj:
+            base_obj[key] = obj[key]
+
+        _ref = db.child('users').child(_key)
+        _ref.update(base_obj)
+
+    return user, _key
+
+
+"""
+In a perfect world, all three process csv file functions can be
+combined into one general one since they do the same thing.
+"""
 
 
 def process_student_csv():
@@ -133,8 +209,20 @@ def process_student_csv():
         update_or_create_user(obj)
 
 
+def process_company_csv():
+    _file = os.path.join(base_dir_path, 'company.csv')
+    objs = read_csv_file(_file)
+
+    for obj in objs:
+        update_or_create_company(obj)
+
+
 def process_recruiter_csv():
-    pass
+    _file = os.path.join(base_dir_path, 'recruiter.csv')
+    objs = read_csv_file(_file)
+
+    for obj in objs:
+        update_or_create_recruiter(obj)
 
 
 def process_jobs_csv():
@@ -148,6 +236,8 @@ if __name__ == '__main__':
           'recruiter.csv file in the same dir')
 
     process_student_csv()
+
+    process_company_csv()
 
     process_recruiter_csv()
 
