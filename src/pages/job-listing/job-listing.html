@@ -28,10 +28,10 @@
             (click)="goToDetail($event, item)">
               <!-- TODO figure this out -->
               <ion-avatar item-start (click)="goToCompany($event, item.company)">
-                <img [src]="(getCompanyAvatarFromJob$(item) | async) || 'http://via.placeholder.com/50x50'">
+                <img [src]="item?.companyLogo || 'http://via.placeholder.com/50x50'">
               </ion-avatar>
               <h2>{{ item?.title }}</h2>
-              <h3>{{ getCompanyNameFromJob$(item) | async }}</h3>
+              <h3>{{ item?.companyName }}</h3>
               <p>{{ item?.description }}</p>
           </button>
         </ion-list>

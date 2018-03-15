@@ -100,7 +100,7 @@ export class JobListingPage {
       .subscribe((payload) => {
         // get job being moved
         const job = payload.jobs[indexes.from];
-        
+
         // split around the insertion index
         let left = [];
         let right =[];
@@ -122,7 +122,7 @@ export class JobListingPage {
         let userKey = payload.user.id;
 
         const itemRef = this.db.list(`users/${userKey}/jobs`);
-        
+
         itemRef.snapshotChanges()
           .map((changes) => changes.map((obj) => obj.key))
           .take(1)
@@ -134,18 +134,5 @@ export class JobListingPage {
           });
 
       });
-  }
-
-
-  getCompanyNameFromJob$(job:Job):Observable<string> {
-    return this.companiesProvider
-      .fetchCompany$(job.company)
-      .map((payload) => payload.name);
-  }
-
-  getCompanyAvatarFromJob$(job:Job):Observable<string> {
-    return this.companiesProvider
-      .fetchCompany$(job.company)
-      .map((payload) => payload.logo);
   }
 }
