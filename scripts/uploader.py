@@ -216,6 +216,8 @@ def update_or_create_job(obj):
 
     # Clean up the values
     obj['company'] = company_ref
+    obj['companyName'] = company['name']
+    obj['companyLogo'] = company['logo']
 
     if _key is None:
         # we are creating
@@ -274,8 +276,8 @@ def process_jobs_csv():
 if __name__ == '__main__':
     print('--------------------')
     print('JobMatcher Uploader')
-    print('\tEnsure there is a student.csv and '
-          'recruiter.csv file in the same dir')
+    print('\tEnsure there is a student.csv, jobs.csv, '
+          'company.csv and recruiter.csv file in the same dir')
 
     process_student_csv()
 
